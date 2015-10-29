@@ -31,12 +31,10 @@ from functools import partial
 
 import pkg_resources
 from celery.signals import after_setup_logger, after_setup_task_logger
-from flask import current_app
 from flask_babelex import gettext as _
 from raven.contrib.flask import Sentry
 from raven.handlers.logging import SentryHandler
 from raven.processors import SanitizePasswordsProcessor
-from werkzeug.local import LocalProxy
 
 
 class InvenioLoggingSentry(object):

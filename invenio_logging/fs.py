@@ -30,8 +30,6 @@ import logging
 import os
 from logging.handlers import RotatingFileHandler
 
-from flask_babelex import gettext as _
-
 
 class InvenioLoggingFs(object):
     """Invenio-Logging extension. Filesystem handler."""
@@ -43,7 +41,6 @@ class InvenioLoggingFs(object):
 
     def init_app(self, app):
         """Flask application initialization."""
-        self.init_config(app)
         app.extensions['invenio-logging-fs'] = self
 
         if app.debug:
@@ -86,6 +83,3 @@ class InvenioLoggingFs(object):
 
         # Add handler to application logger
         app.logger.addHandler(handler)
-
-    def init_config(self, app):
-        """Initialize configuration."""
