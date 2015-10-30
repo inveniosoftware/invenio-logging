@@ -22,7 +22,7 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-"""Module providing logging capabilities"""
+"""Module providing logging capabilities."""
 
 import os
 import sys
@@ -34,9 +34,10 @@ readme = open('README.rst').read()
 history = open('CHANGES.rst').read()
 
 tests_require = [
+    'blinker>=1.4',
     'check-manifest>=0.25',
     'coverage>=4.0',
-    'isort==4.2.2',
+    'isort>=4.2.2',
     'pep257>=0.7.0',
     'pytest-cache>=1.0',
     'pytest-cov>=1.8.0',
@@ -46,15 +47,12 @@ tests_require = [
 
 extras_require = {
     'docs': [
-        "Sphinx>=1.3",
+        'Sphinx>=1.3',
     ],
     'tests': tests_require,
     'sentry': [
-        'raven',
-        'celery',
-        'werkzeug',
-        'webassets',
-        'blinker',
+        'raven>=5.0.0',
+        'celery>=3.1.0',
     ]
 }
 
@@ -68,13 +66,13 @@ setup_requires = [
 
 install_requires = [
     'Flask-BabelEx>=0.9.2',
+    'Flask>=0.10',
 ]
 
 packages = find_packages()
 
 
 class PyTest(TestCommand):
-
     """PyTest Test."""
 
     user_options = [('pytest-args=', 'a', "Arguments to pass to py.test")]
@@ -118,7 +116,7 @@ setup(
     version=version,
     description=__doc__,
     long_description=readme + '\n\n' + history,
-    keywords='invenio TODO',
+    keywords='invenio logging',
     license='GPLv2',
     author='CERN',
     author_email='info@invenio-software.org',
@@ -146,7 +144,7 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
-        'Development Status :: 1 - Planning',
+        'Development Status :: 3 - Alpha',
     ],
     cmdclass={'test': PyTest},
 )

@@ -28,3 +28,4 @@ Authors
 Module providing logging capabilities
 
 - Bruno Cuc <bruno.cuc@cern.ch>
+- Lars Holm Nielsen <lars.holm.nielsen@cern.ch>

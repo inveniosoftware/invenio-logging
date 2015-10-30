@@ -1,8 +1,8 @@
 ========================
- Invenio-Logging v0.1.0
+ Invenio-Logging v1.0.0
 ========================
 
-Invenio-Logging v0.1.0 was released on TBD, 2015.
+Invenio-Logging v1.0.0 was released on October 30, 2015.
 
 About
 -----
@@ -19,7 +19,7 @@ What's new
 Installation
 ------------
 
-   $ pip install invenio-logging==0.1.0
+   $ pip install invenio-logging==1.0.0
 
 Documentation
 -------------
