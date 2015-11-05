@@ -37,6 +37,27 @@ from flask_babelex import Babel
 
 from invenio_logging.fs import InvenioLoggingFs
 from invenio_logging.sentry import InvenioLoggingSentry
+from mock import Mock
+
+
+def test_init(generic_app):
+    """Test extension initialization."""
+    ext = InvenioLoggingSentry(generic_app)
+    assert 'invenio-logging-sentry' in generic_app.extensions
+    ext = InvenioLoggingFs(generic_app)
+    assert 'invenio-logging-fs' in generic_app.extensions
+
+
+def test_add_handler(app_for_sentry):
+    """Test sentry handler modification methods."""
+    ext = InvenioLoggingSentry(app_for_sentry)
+    new_logger = logging.Logger(Mock())
+    ext.add_handler(new_logger, app_for_sentry)
+    assert new_logger.handlers
+
+    # now test same re-adding
+    ext.add_handler(new_logger, app_for_sentry)
+    assert len(new_logger.handlers) == 1
 
 
 def test_version():
@@ -45,13 +66,9 @@ def test_version():
     assert __version__
 
 
-def test_init(generic_app):
-    """Test extension initialization."""
-
-    ext = InvenioLoggingSentry(generic_app)
-    assert 'invenio-logging-sentry' in generic_app.extensions
-    ext = InvenioLoggingFs(generic_app)
-    assert 'invenio-logging-fs' in generic_app.extensions
+def test_enabled_logging_sentry_celery(app_for_sentry):
+    app_for_sentry.config["LOGGING_SENTRY_CELERY"] = True
+    ext = InvenioLoggingSentry(app_for_sentry)
 
 
 def test_sentry(app_for_sentry):
