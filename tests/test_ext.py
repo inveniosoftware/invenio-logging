@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Invenio.
-# Copyright (C) 2015, 2016 CERN.
+# Copyright (C) 2016 CERN.
 #
 # Invenio is free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public License as
@@ -22,28 +22,35 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-"""Pytest configuration."""
+"""Warnings capturing tests."""
 
 from __future__ import absolute_import, print_function
 
 import logging
-import shutil
-import tempfile
 
-import pytest
+from flask import Flask
 
-
-@pytest.yield_fixture()
-def tmppath():
-    """Make a temporary directory."""
-    tmpdir = tempfile.mkdtemp()
-    yield tmpdir
-    shutil.rmtree(tmpdir)
+from invenio_logging.ext import InvenioLoggingBase
 
 
-@pytest.yield_fixture()
-def pywarnlogger():
-    """Rest the py.warnings logger."""
-    logger = logging.getLogger('py.warnings')
-    yield logger
-    logger.handlers = []
+def test_init(pywarnlogger):
+    """Test extension initialization."""
+    app = Flask('testapp')
+    ext = InvenioLoggingBase(app)
+    assert len(pywarnlogger.handlers) == 0
+
+    # Capture warnings.
+    handler = logging.StreamHandler()
+    ext.capture_pywarnings(handler)
+    assert len(pywarnlogger.handlers) == 1
+
+    # Don't install the same handler twice (i.e. prevent multiple Flask apps
+    # to install the same handlers and thus receiving double notifications)
+    handler = logging.StreamHandler()
+    ext.capture_pywarnings(handler)
+    assert len(pywarnlogger.handlers) == 1
+
+    # Different types of handlers are welcome
+    handler = logging.NullHandler()
+    ext.capture_pywarnings(handler)
+    assert len(pywarnlogger.handlers) == 2

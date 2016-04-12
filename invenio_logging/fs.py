@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Invenio.
-# Copyright (C) 2015 CERN.
+# Copyright (C) 2015, 2016 CERN.
 #
 # Invenio is free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public License as
@@ -27,27 +27,28 @@
 from __future__ import absolute_import, print_function
 
 import logging
-import os
+import sys
 from logging.handlers import RotatingFileHandler
+from os.path import dirname, exists
+
+from .ext import InvenioLoggingBase
 
 
-class InvenioLoggingFs(object):
+class InvenioLoggingFS(InvenioLoggingBase):
     """Invenio-Logging extension. Filesystem handler."""
-
-    def __init__(self, app=None):
-        """Extension initialization."""
-        if app:
-            self.init_app(app)
 
     def init_app(self, app):
         """Flask application initialization."""
+        self.init_config(app)
+        if app.config['LOGGING_FS_LOGFILE'] is None:
+            return
+        self.install_handler(app)
         app.extensions['invenio-logging-fs'] = self
 
-        if app.debug:
-            logger = logging.getLogger('py.warnings')
-            logger.addHandler(logging.StreamHandler())
-            logger.setLevel(logging.WARNING)
-
+    def init_config(self, app):
+        """Initialize config."""
+        app.config.setdefault('LOGGING_FS_LOGFILE', None)
+        app.config.setdefault('LOGGING_FS_PYWARNINGS', False)
         app.config.setdefault('LOGGING_FS_BACKUPCOUNT', 5)
         app.config.setdefault('LOGGING_FS_MAXBYTES', 104857600)  # 100mb
         app.config.setdefault(
@@ -55,31 +56,36 @@ class InvenioLoggingFs(object):
             'DEBUG' if app.debug else 'WARNING'
         )
 
-        # Create log directory if it does not exists
-        try:
-            os.makedirs(
-                os.path.join(app.instance_path,
-                             app.config.get('LOGGING_FS_LOGDIR', ''))
-            )
-        except Exception:
-            pass
+        # Support injecting instance path and/or sys.prefix
+        if app.config['LOGGING_FS_LOGFILE'] is not None:
+            app.config['LOGGING_FS_LOGFILE'] = \
+                app.config['LOGGING_FS_LOGFILE'].format(
+                    instance_path=app.instance_path,
+                    sys_prefix=sys.prefix,
+                )
+
+    def install_handler(self, app):
+        """Install log handler on Flask application."""
+        # Check if directory exists.
+        basedir = dirname(app.config['LOGGING_FS_LOGFILE'])
+        if not exists(basedir):
+            raise ValueError(
+                'Log directory {0} does not exists.'.format(basedir))
 
         handler = RotatingFileHandler(
-            os.path.join(
-                app.instance_path,
-                app.config.get('LOGGING_FS_LOGDIR', ''),
-                app.logger_name + '.log'
-            ),
+            app.config['LOGGING_FS_LOGFILE'],
             backupCount=app.config['LOGGING_FS_BACKUPCOUNT'],
-            maxBytes=app.config['LOGGING_FS_MAXBYTES']
+            maxBytes=app.config['LOGGING_FS_MAXBYTES'],
+            delay=True,
         )
-
         handler.setFormatter(logging.Formatter(
             '%(asctime)s %(levelname)s: %(message)s '
             '[in %(pathname)s:%(lineno)d]'
         ))
-
         handler.setLevel(app.config['LOGGING_FS_LEVEL'])
 
         # Add handler to application logger
         app.logger.addHandler(handler)
+
+        if app.config['LOGGING_FS_PYWARNINGS']:
+            self.capture_pywarnings(handler)

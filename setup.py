@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Invenio.
-# Copyright (C) 2015 CERN.
+# Copyright (C) 2015, 2016 CERN.
 #
 # Invenio is free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public License as
@@ -25,10 +25,8 @@
 """Module providing logging capabilities."""
 
 import os
-import sys
 
 from setuptools import find_packages, setup
-from setuptools.command.test import test as TestCommand
 
 readme = open('README.rst').read()
 history = open('CHANGES.rst').read()
@@ -37,8 +35,11 @@ tests_require = [
     'blinker>=1.4',
     'check-manifest>=0.25',
     'coverage>=4.0',
+    'flask-celeryext>=0.2.0',
+    'httpretty>=0.8.14',
     'isort>=4.2.2',
-    'pep257>=0.7.0',
+    'mock>=1.3.0',
+    'pydocstyle>=1.0.0',
     'pytest-cache>=1.0',
     'pytest-cov>=1.8.0',
     'pytest-pep8>=1.0.6',
@@ -51,7 +52,7 @@ extras_require = {
     ],
     'tests': tests_require,
     'sentry': [
-        'raven>=5.0.0',
+        'raven[flask]>=5.12.0',
         'celery>=3.1.0',
     ]
 }
@@ -61,49 +62,15 @@ for reqs in extras_require.values():
     extras_require['all'].extend(reqs)
 
 setup_requires = [
-    'Babel>=1.3',
+    'pytest-runner>=2.7.0',
 ]
 
 install_requires = [
-    'Flask-BabelEx>=0.9.2',
     'Flask>=0.10',
 ]
 
 packages = find_packages()
 
-
-class PyTest(TestCommand):
-    """PyTest Test."""
-
-    user_options = [('pytest-args=', 'a', "Arguments to pass to py.test")]
-
-    def initialize_options(self):
-        """Init pytest."""
-        TestCommand.initialize_options(self)
-        self.pytest_args = []
-        try:
-            from ConfigParser import ConfigParser
-        except ImportError:
-            from configparser import ConfigParser
-        config = ConfigParser()
-        config.read('pytest.ini')
-        self.pytest_args = config.get('pytest', 'addopts').split(' ')
-
-    def finalize_options(self):
-        """Finalize pytest."""
-        TestCommand.finalize_options(self)
-        if hasattr(self, '_test_args'):
-            self.test_suite = ''
-        else:
-            self.test_args = []
-            self.test_suite = True
-
-    def run_tests(self):
-        """Run tests."""
-        # import here, cause outside the eggs aren't loaded
-        import pytest
-        errno = pytest.main(self.pytest_args)
-        sys.exit(errno)
 
 # Get the version string. Cannot be done with import!
 g = {}
@@ -125,7 +92,22 @@ setup(
     zip_safe=False,
     include_package_data=True,
     platforms='any',
-    entry_points={},
+    entry_points={
+        'invenio_base.apps': [
+            'invenio_logging_fs = invenio_logging.fs:InvenioLoggingFS',
+            'invenio_logging_sentry'
+            ' = invenio_logging.sentry:InvenioLoggingSentry',
+            'invenio_logging_console'
+            ' = invenio_logging.console:InvenioLoggingConsole',
+        ],
+        'invenio_base.api_apps': [
+            'invenio_logging_fs = invenio_logging.fs:InvenioLoggingFS',
+            'invenio_logging_sentry'
+            ' = invenio_logging.sentry:InvenioLoggingSentry',
+            'invenio_logging_console'
+            ' = invenio_logging.console:InvenioLoggingConsole',
+        ],
+    },
     extras_require=extras_require,
     install_requires=install_requires,
     setup_requires=setup_requires,
@@ -146,5 +128,4 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Development Status :: 3 - Alpha',
     ],
-    cmdclass={'test': PyTest},
 )
