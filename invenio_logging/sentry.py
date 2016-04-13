@@ -51,6 +51,9 @@ from __future__ import absolute_import, print_function
 
 import logging
 
+import six
+from werkzeug.utils import import_string
+
 from .ext import InvenioLoggingBase
 
 
@@ -78,6 +81,9 @@ class InvenioLoggingSentry(InvenioLoggingBase):
         app.config.setdefault('LOGGING_SENTRY_PYWARNINGS', False)
         # Configure Celery?
         app.config.setdefault('LOGGING_SENTRY_CELERY', False)
+        # Sentry Flask extension class - only needed in case you need to
+        # overwrite something really deep down.
+        app.config.setdefault('LOGGING_SENTRY_CLASS', None)
         # Sentry transport
         app.config.setdefault(
             'SENTRY_TRANSPORT',
@@ -93,7 +99,16 @@ class InvenioLoggingSentry(InvenioLoggingBase):
 
         # Installs sentry in app.extensions['sentry']
         level = getattr(logging, app.config['LOGGING_SENTRY_LEVEL'])
-        sentry = Sentry(
+
+        # Get the Sentry class.
+        cls = app.config['LOGGING_SENTRY_CLASS']
+        if cls:
+            if isinstance(cls, six.string_types):
+                cls = import_string(cls)
+        else:
+            cls = Sentry
+
+        sentry = cls(
             app,
             logging=True,
             level=level

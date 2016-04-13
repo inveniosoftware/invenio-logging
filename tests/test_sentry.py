@@ -31,8 +31,9 @@ import logging
 import httpretty
 import pytest
 from celery.utils.log import get_task_logger
-from flask import Flask
+from flask import Flask, request
 from flask_celeryext import create_celery_app
+from flask_login import LoginManager, UserMixin, login_user
 from mock import patch
 
 
@@ -49,6 +50,17 @@ def test_init():
     InvenioLoggingSentry(app)
     assert 'invenio-logging-sentry' in app.extensions
     assert 'sentry' in app.extensions
+
+
+def test_custom_class(pywarnlogger):
+    """Test stream handler."""
+    from invenio_logging.sentry import InvenioLoggingSentry
+    app = Flask('testapp')
+    app.config['SENTRY_DSN'] = 'http://user:pw@localhost/0'
+    app.config['LOGGING_SENTRY_CLASS'] = 'invenio_logging.sentry6:Sentry6'
+    InvenioLoggingSentry(app)
+    from invenio_logging.sentry6 import Sentry6
+    assert isinstance(app.extensions['sentry'], Sentry6)
 
 
 def test_stream_handler_in_debug(pywarnlogger):
@@ -124,3 +136,32 @@ def test_celery():
     from time import sleep
     sleep(1)
     assert httpretty.last_request().path == '/api/0/store/'
+
+
+def test_sentry6():
+    """Test Sentry 6."""
+    from invenio_logging.sentry import InvenioLoggingSentry
+    app = Flask('testapp')
+    app.config.update(dict(
+        SENTRY_DSN='http://user:pw@localhost/0',
+        LOGGING_SENTRY_CLASS='invenio_logging.sentry6:Sentry6',
+        SENTRY_USER_ATTRS=['name'],
+        SECRET_KEY='CHANGEME',
+    ))
+    InvenioLoggingSentry(app)
+    LoginManager(app)
+
+    class User(UserMixin):
+        def __init__(self, user_id, name):
+            self.id = user_id
+            self.name = name
+
+    with app.test_request_context('/'):
+        assert app.extensions['sentry'].get_user_info(request) == {}
+
+    with app.test_request_context('/'):
+        login_user(User(1, 'viggo'))
+        assert app.extensions['sentry'].get_user_info(request) == {
+            'id': '1',
+            'name': 'viggo',
+        }

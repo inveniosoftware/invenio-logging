@@ -36,6 +36,7 @@ tests_require = [
     'check-manifest>=0.25',
     'coverage>=4.0',
     'flask-celeryext>=0.2.0',
+    'flask-login>=0.3.2',
     'httpretty>=0.8.14',
     'isort>=4.2.2',
     'mock>=1.3.0',
@@ -52,7 +53,7 @@ extras_require = {
     ],
     'tests': tests_require,
     'sentry': [
-        'raven[flask]>=5.12.0',
+        'raven[flask]>=5.0.0',
         'celery>=3.1.0',
     ]
 }
@@ -67,6 +68,7 @@ setup_requires = [
 
 install_requires = [
     'Flask>=0.10',
+    'six>=1.10.0',
 ]
 
 packages = find_packages()
