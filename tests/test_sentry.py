@@ -131,7 +131,7 @@ def test_celery():
         content_type='application/json',
         status=200,
     )
-    test_task()
+    test_task.delay()
     # Give sentry time to send request
     from time import sleep
     sleep(1)

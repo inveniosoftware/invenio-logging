@@ -121,7 +121,11 @@ class InvenioLoggingSentry(InvenioLoggingBase):
 
         # Setup Celery logging to Sentry
         if app.config['LOGGING_SENTRY_CELERY']:
-            register_logger_signal(sentry.client, loglevel=level)
+            try:
+                register_logger_signal(sentry.client, loglevel=level)
+            except TypeError:
+                # Compatibility mode for Raven<=5.1.0
+                register_logger_signal(sentry.client)
             register_signal(sentry.client)
 
         # Werkzeug only adds a stream handler if there's no other handlers
