@@ -25,6 +25,17 @@
 API Docs
 ========
 
-invenio_logging
----------------
+Loggers
+-------
 
+.. automodule:: invenio_logging.console
+   :members:
+
+.. automodule:: invenio_logging.fs
+   :members:
+
+.. automodule:: invenio_logging.sentry6
+   :members:
+
+.. automodule:: invenio_logging.sentry
+   :members:

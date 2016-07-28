@@ -33,12 +33,18 @@ class InvenioLoggingBase(object):
     """Invenio-Logging extension for console."""
 
     def __init__(self, app=None):
-        """Extension initialization."""
+        """Extension initialization.
+
+        :param app: An instance of :class:`~flask.Flask`.
+        """
         if app:
             self.init_app(app)
 
     def init_app(self, app):
-        """Initialize app."""
+        """Initialize app.
+
+        :param app: An instance of :class:`~flask.Flask`.
+        """
 
     @staticmethod
     def capture_pywarnings(handler):

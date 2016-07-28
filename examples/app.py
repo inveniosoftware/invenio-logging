@@ -30,20 +30,23 @@ Run example development server:
 .. code-block:: console
 
    $ cd examples
-   $ python app.py
+   $ export FLASK_APP=app.py
+   $ flask run
 """
 
 from __future__ import absolute_import, print_function
 
 from flask import Flask
-from flask_babelex import Babel
 
-from invenio_logging import InvenioLogging
+from invenio_logging.console import InvenioLoggingConsole
 
 # Create Flask application
 app = Flask(__name__)
-Babel(app)
-InvenioLogging(app)
+InvenioLoggingConsole(app)
 
-if __name__ == "__main__":
-    app.run()
+
+@app.route('/')
+def index():
+    """Log error."""
+    app.logger.error('Example error')
+    return 'Hello world!'
