@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Invenio.
-# Copyright (C) 2015 CERN.
+# Copyright (C) 2015, 2016 CERN.
 #
 # Invenio is free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public License as
@@ -27,7 +27,7 @@ from __future__ import print_function
 import os
 
 import sphinx.environment
-from docutils.utils import get_source_line
+
 
 # -- General configuration ------------------------------------------------
 
@@ -131,7 +131,7 @@ todo_include_todos = False
 html_theme = 'alabaster'
 
 html_theme_options = {
-    'description': 'Module providing logging capabilities',
+    'description': 'Module providing logging capabilities.',
     'github_user': 'inveniosoftware',
     'github_repo': 'invenio-logging',
     'github_button': False,
@@ -311,7 +311,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   (master_doc, 'invenio-logging', u'Invenio-Logging Documentation',
-   author, 'invenio-logging', 'Module providing logging capabilities',
+   author, 'invenio-logging', 'Module providing logging capabilities.',
    'Miscellaneous'),
 ]
 
@@ -330,3 +330,6 @@ texinfo_documents = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'https://docs.python.org/': None}
+
+# Autodoc configuraton.
+autoclass_content = 'both'
