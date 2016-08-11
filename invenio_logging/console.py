@@ -22,7 +22,27 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-"""Invenio filesystem logging module."""
+"""Invenio filesystem logging module.
+
+Configuration
+~~~~~~~~~~~~~
+
+.. py:data:: LOGGING_CONSOLE = True
+
+   Enable logging to a console.
+
+.. py:data:: LOGGING_CONSOLE_PYWARNINGS = Flask.debug
+
+   Enable Python warnings if the application is in debug mode.
+
+.. py:data:: LOGGING_CONSOLE_LEVEL = None
+
+   Define valid Python logging level from ``CRITICAL``, ``ERROR``, ``WARNING``,
+   ``INFO``, ``DEBUG``, or ``NOTSET``.
+
+This extension is enabled by default and automatically installed via
+``invenio_base.apps`` and ``invenio_base.api_apps`` entry points.
+"""
 
 from __future__ import absolute_import, print_function
 

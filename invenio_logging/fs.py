@@ -22,7 +22,36 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-"""Invenio filesystem logging module."""
+"""Invenio filesystem logging module.
+
+Configuration
+~~~~~~~~~~~~~
+
+.. py:data:: LOGGING_FS_LOGFILE = None
+
+   Enable logging to a console.
+
+.. py:data:: LOGGING_FS_PYWARNINGS = False
+
+   Enable Python warnings.
+
+.. py:data:: LOGGING_FS_BACKUPCOUNT = 5
+
+   Define number of backup files.
+
+.. py:data:: LOGGING_FS_MAXBYTES = 100 * 1024 * 1024
+
+   Define maximal file size.  (Default: 100MB)
+
+.. py:data:: LOGGING_FS_LEVEL = 'WARNING'
+
+   Define valid Python logging level from ``CRITICAL``, ``ERROR``, ``WARNING``,
+   ``INFO``, ``DEBUG``, or ``NOTSET``. The default value is set to ``DEBUG``
+   if the application is in debug mode otherwise it is set to ``WARNING``.
+
+This extension is automatically installed via ``invenio_base.apps`` and
+``invenio_base.api_apps`` entry points.
+"""
 
 from __future__ import absolute_import, print_function
 
@@ -50,7 +79,7 @@ class InvenioLoggingFS(InvenioLoggingBase):
         app.config.setdefault('LOGGING_FS_LOGFILE', None)
         app.config.setdefault('LOGGING_FS_PYWARNINGS', False)
         app.config.setdefault('LOGGING_FS_BACKUPCOUNT', 5)
-        app.config.setdefault('LOGGING_FS_MAXBYTES', 104857600)  # 100mb
+        app.config.setdefault('LOGGING_FS_MAXBYTES', 104857600)  # 100MB
         app.config.setdefault(
             'LOGGING_FS_LEVEL',
             'DEBUG' if app.debug else 'WARNING'
