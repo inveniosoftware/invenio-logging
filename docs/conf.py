@@ -137,8 +137,8 @@ html_theme_options = {
     'github_banner': True,
     'show_powered_by': False,
     'extra_nav_links': {
-        'invenio-logging@GitHub': 'http://github.com/inveniosoftware/invenio-logging',
-        'invenio-logging@PyPI': 'http://pypi.python.org/pypi/invenio-logging/',
+        'invenio-logging@GitHub': 'https://github.com/inveniosoftware/invenio-logging',
+        'invenio-logging@PyPI': 'https://pypi.python.org/pypi/invenio-logging/',
     }
 }
 
