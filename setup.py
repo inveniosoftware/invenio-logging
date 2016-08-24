@@ -67,7 +67,7 @@ setup_requires = [
 ]
 
 install_requires = [
-    'Flask>=0.10',
+    'Flask>=0.11.1',
     'six>=1.10.0',
 ]
 
