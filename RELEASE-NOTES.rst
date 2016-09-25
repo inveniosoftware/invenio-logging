@@ -24,7 +24,7 @@ Installation
 Documentation
 -------------
 
-   http://pythonhosted.org/invenio-logging/
+   http://invenio-logging.readthedocs.io/
 
 Happy hacking and thanks for flying Invenio-Logging.
 
