@@ -24,31 +24,6 @@
 
 """Invenio filesystem logging module.
 
-Configuration
-~~~~~~~~~~~~~
-
-.. py:data:: LOGGING_FS_LOGFILE = None
-
-   Enable logging to a console.
-
-.. py:data:: LOGGING_FS_PYWARNINGS = False
-
-   Enable Python warnings.
-
-.. py:data:: LOGGING_FS_BACKUPCOUNT = 5
-
-   Define number of backup files.
-
-.. py:data:: LOGGING_FS_MAXBYTES = 100 * 1024 * 1024
-
-   Define maximal file size.  (Default: 100MB)
-
-.. py:data:: LOGGING_FS_LEVEL = 'WARNING'
-
-   Define valid Python logging level from ``CRITICAL``, ``ERROR``, ``WARNING``,
-   ``INFO``, ``DEBUG``, or ``NOTSET``. The default value is set to ``DEBUG``
-   if the application is in debug mode otherwise it is set to ``WARNING``.
-
 This extension is automatically installed via ``invenio_base.apps`` and
 ``invenio_base.api_apps`` entry points.
 """
@@ -60,6 +35,7 @@ import sys
 from logging.handlers import RotatingFileHandler
 from os.path import dirname, exists
 
+from . import config
 from .ext import InvenioLoggingBase
 
 
@@ -76,14 +52,13 @@ class InvenioLoggingFS(InvenioLoggingBase):
 
     def init_config(self, app):
         """Initialize config."""
-        app.config.setdefault('LOGGING_FS_LOGFILE', None)
-        app.config.setdefault('LOGGING_FS_PYWARNINGS', False)
-        app.config.setdefault('LOGGING_FS_BACKUPCOUNT', 5)
-        app.config.setdefault('LOGGING_FS_MAXBYTES', 104857600)  # 100MB
         app.config.setdefault(
             'LOGGING_FS_LEVEL',
             'DEBUG' if app.debug else 'WARNING'
         )
+        for k in dir(config):
+            if k.startswith('LOGGING_FS'):
+                app.config.setdefault(k, getattr(config, k))
 
         # Support injecting instance path and/or sys.prefix
         if app.config['LOGGING_FS_LOGFILE'] is not None:

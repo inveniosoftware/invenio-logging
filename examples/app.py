@@ -23,27 +23,36 @@
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
 
-"""Minimal Flask application example for development.
+"""Minimal Flask application example.
 
-Install requirements:
-
-.. code-block:: console
-
-    $ pip install -e .[all]
-    $ cd examples
-
-Run example development server:
+First install Invenio-Logging, setup the application and load
+fixture data by running:
 
 .. code-block:: console
 
-    $ FLASK_APP=app.py flask run --debugger -p 5000
+   $ pip install -e .[all]
+   $ cd examples
+   $ ./app-setup.sh
+   $ ./app-fixtures.sh
 
-Test the demo:
+Next, start the development server:
 
 .. code-block:: console
 
-    curl -v -XGET 'http://localhost:5000/'
+   $ export FLASK_APP=app.py FLASK_DEBUG=1
+   $ flask run
 
+and open the example application in your browser:
+
+.. code-block:: console
+
+    $ open http://127.0.0.1:5000/
+
+To reset the example application run:
+
+.. code-block:: console
+
+    $ ./app-teardown.sh
 """
 
 from __future__ import absolute_import, print_function
@@ -61,4 +70,4 @@ InvenioLoggingConsole(app)
 def index():
     """Log error."""
     app.logger.error('Example error')
-    return 'Hello world!'
+    return 'Welcome to Invenio-Logging!'

@@ -54,6 +54,7 @@ import logging
 import six
 from werkzeug.utils import import_string
 
+from . import config
 from .ext import InvenioLoggingBase
 
 
@@ -74,21 +75,9 @@ class InvenioLoggingSentry(InvenioLoggingBase):
 
     def init_config(self, app):
         """Initialize configuration."""
-        app.config.setdefault('SENTRY_DSN', None)
-        # Defaults to only reporting errors and warnings.
-        app.config.setdefault('LOGGING_SENTRY_LEVEL', 'WARNING')
-        # Send python warnings to Sentry?
-        app.config.setdefault('LOGGING_SENTRY_PYWARNINGS', False)
-        # Configure Celery?
-        app.config.setdefault('LOGGING_SENTRY_CELERY', False)
-        # Sentry Flask extension class - only needed in case you need to
-        # overwrite something really deep down.
-        app.config.setdefault('LOGGING_SENTRY_CLASS', None)
-        # Sentry transport
-        app.config.setdefault(
-            'SENTRY_TRANSPORT',
-            'raven.transport.threaded.ThreadedHTTPTransport'
-        )
+        for k in dir(config):
+            if k.startswith('LOGGING_SENTRY') or k.startswith('SENTRY_DSN'):
+                app.config.setdefault(k, getattr(config, k))
 
     def install_handler(self, app):
         """Install log handler."""

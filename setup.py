@@ -32,10 +32,8 @@ readme = open('README.rst').read()
 history = open('CHANGES.rst').read()
 
 tests_require = [
-    'blinker>=1.4',
     'check-manifest>=0.25',
     'coverage>=4.0',
-    'flask-celeryext>=0.2.0',
     'flask-login>=0.3.2',
     'httpretty>=0.8.14',
     'isort>=4.2.2',
@@ -49,12 +47,12 @@ tests_require = [
 
 extras_require = {
     'docs': [
-        'Sphinx>=1.4.2',
+        'Sphinx>=1.5.1',
     ],
     'tests': tests_require,
     'sentry': [
         'raven[flask]>=5.0.0',
-        'celery>=3.1.0',
+        'flask-celeryext>=0.2.2',
     ]
 }
 
@@ -96,18 +94,18 @@ setup(
     platforms='any',
     entry_points={
         'invenio_base.apps': [
+            'invenio_logging_console'
+            ' = invenio_logging.console:InvenioLoggingConsole',
             'invenio_logging_fs = invenio_logging.fs:InvenioLoggingFS',
             'invenio_logging_sentry'
             ' = invenio_logging.sentry:InvenioLoggingSentry',
-            'invenio_logging_console'
-            ' = invenio_logging.console:InvenioLoggingConsole',
         ],
         'invenio_base.api_apps': [
+            'invenio_logging_console'
+            ' = invenio_logging.console:InvenioLoggingConsole',
             'invenio_logging_fs = invenio_logging.fs:InvenioLoggingFS',
             'invenio_logging_sentry'
             ' = invenio_logging.sentry:InvenioLoggingSentry',
-            'invenio_logging_console'
-            ' = invenio_logging.console:InvenioLoggingConsole',
         ],
     },
     extras_require=extras_require,
