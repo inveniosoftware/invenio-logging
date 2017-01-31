@@ -22,30 +22,7 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-"""Sentry logging module.
-
-Sentry can also be configured with the following variables (see raven for
-further details):
-
-- ``SENTRY_AUTO_LOG_STACKS``
-- ``SENTRY_EXCLUDE_PATHS``
-- ``SENTRY_INCLUDE_PATHS``
-- ``SENTRY_MAX_LENGTH_LIST``
-- ``SENTRY_MAX_LENGTH_STRING``
-- ``SENTRY_NAME``
-- ``SENTRY_PROCESSORS``
-- ``SENTRY_RELEASE``
-- ``SENTRY_SITE_NAME``
-- ``SENTRY_TAGS``
-- ``SENTRY_TRANSPORT``
-
-Note that Celery does not deal well with threaded transport, so you should make
-sure that your Celery workers are configured with:
-
-.. code-block:: python
-
-   SENTRY_TRANSPORT = 'raven.transport.http.HTTPTransport'
-"""
+"""Sentry logging module."""
 
 from __future__ import absolute_import, print_function
 

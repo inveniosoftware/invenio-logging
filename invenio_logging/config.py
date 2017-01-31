@@ -23,49 +23,78 @@
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
 
-"""Configuration for Invenio-Logging."""
+"""Configuration for Invenio-Logging.
+
+Sentry can, in addition to the configuration variables listed, be further
+configured with the folllowing configuration variables (see
+`Raven <https://docs.sentry.io/clients/python/integrations/flask/#settings>`_
+for further details):
+
+- ``SENTRY_AUTO_LOG_STACKS``
+- ``SENTRY_EXCLUDE_PATHS``
+- ``SENTRY_INCLUDE_PATHS``
+- ``SENTRY_MAX_LENGTH_LIST``
+- ``SENTRY_MAX_LENGTH_STRING``
+- ``SENTRY_NAME``
+- ``SENTRY_PROCESSORS``
+- ``SENTRY_RELEASE``
+- ``SENTRY_SITE_NAME``
+- ``SENTRY_TAGS``
+- ``SENTRY_TRANSPORT``
+
+
+.. note::
+
+   Celery does not deal well with the threaded Sentry transport, so you should
+   make sure that your **Celery workers** are configured with:
+
+   .. code-block:: python
+
+      SENTRY_TRANSPORT = 'raven.transport.http.HTTPTransport'
+"""
 
 # -------
 # CONSOLE
 # -------
 LOGGING_CONSOLE = True
-"""Enable logging to a console."""
+"""Enable logging to the console."""
 
 LOGGING_CONSOLE_PYWARNINGS = None
-"""Enable logging of Python warnings.
+"""Enable logging of Python warnings to the console.
 
-By default, warnings are logged if the application is in debug mode, otherwise
-warnings are not logged."""
+By default, warnings are logged to the console if the application is in debug
+mode, otherwise warnings are not logged.
+"""
 
 LOGGING_CONSOLE_LEVEL = None
-"""Define valid Python logging level from ``CRITICAL``, ``ERROR``, ``WARNING``,
-``INFO``, ``DEBUG``, or ``NOTSET``."""
+"""Console logging level.
+
+Set to a valid Python logging level: ``CRITICAL``, ``ERROR``, ``WARNING``,
+``INFO``, ``DEBUG``, or ``NOTSET``.
+"""
 
 
 # ----------
 # FILESYSTEM
 # ----------
 LOGGING_FS_LOGFILE = None
-"""Enable logging to a console."""
+"""Enable logging to the filesystem."""
 
 LOGGING_FS_PYWARNINGS = False
-"""Enable Python warnings."""
+"""Enable logging of Python warnings to filesystem logging."""
 
 LOGGING_FS_BACKUPCOUNT = 5
-"""Define number of backup files."""
+"""Number of rotated log files to keep."""
 
 LOGGING_FS_MAXBYTES = 100 * 1024 * 1024
-"""Define maximal file size.
-By default: 100MB."""
+"""Maximum size of logging file. Default: 100MB."""
 
 LOGGING_FS_LEVEL = None
-"""Define valid Python logging level from ``CRITICAL``, ``ERROR``, ``WARNING``,
-``INFO``, ``DEBUG``, or ``NOTSET``.
+"""Filesystem logging level.
 
-By default, warnings are logged if , otherwise
-warnings are not logged.
-If the application is in debug mode, Python logging level will be set
-to ``DEBUG``, otherwise it is set to ``WARNING``."""
+Set to a valid Python logging level: ``CRITICAL``, ``ERROR``, ``WARNING``,
+``INFO``, ``DEBUG``, or ``NOTSET``.
+"""
 
 
 # ------
@@ -75,17 +104,23 @@ SENTRY_DSN = None
 """Set SENTRY_DSN environment variable."""
 
 LOGGING_SENTRY_LEVEL = 'WARNING'
-"""Default to only reporting errors and warnings."""
+"""Sentry logging level.
+
+Defaults to only reporting errors and warnings.
+"""
 
 LOGGING_SENTRY_PYWARNINGS = False
-"""Send python warnings to Sentry?"""
+"""Enable logging of Python warnings to Sentry."""
 
 LOGGING_SENTRY_CELERY = False
-"""Configure Celery?"""
+"""Configure Celery to send logging to Sentry."""
 
 LOGGING_SENTRY_CLASS = None
-"""Sentry Flask extension class - only needed in case you need to overwrite
-something really deep down."""
+"""Import path of sentry Flask extension class.
+
+This allows you to customize the Sentry extension class. In particular if you
+are logging to Sentry v6, you can set this to
+:class:`invenio_logging.sentry6.Sentry6`."""
 
 SENTRY_TRANSPORT = 'raven.transport.threaded.ThreadedHTTPTransport'
-"""Sentry transport."""
+"""Default Sentry transport."""
