@@ -1,15 +1,13 @@
 ==========================
- Invenio-Logging v1.0.0a3
+ Invenio-Logging v1.0.0b1
 ==========================
 
-Invenio-Logging v1.0.0a3 was released on July 28, 2016.
+Invenio-Logging v1.0.0b1 was released on January 31, 2017.
 
 About
 -----
 
 Module providing logging capabilities
-
-*This is an experimental developer preview release.*
 
 What's new
 ----------
@@ -19,7 +17,7 @@ What's new
 Installation
 ------------
 
-   $ pip install invenio-logging==1.0.0a3
+   $ pip install invenio-logging==1.0.0b1
 
 Documentation
 -------------

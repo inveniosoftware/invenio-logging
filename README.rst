@@ -41,9 +41,7 @@
         :target: https://github.com/inveniosoftware/invenio-logging/blob/master/LICENSE
 
 
-Module providing logging capabilities
+Invenio-Logging is a core component of Invenio responsible for configuring
+the Flask application logger.
 
-*This is an experimental developer preview release.*
-
-* Free software: GPLv2 license
-* Documentation: https://invenio-logging.readthedocs.io/
+Further documentation at: https://invenio-logging.readthedocs.io/
