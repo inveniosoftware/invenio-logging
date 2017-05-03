@@ -74,6 +74,19 @@ def test_stream_handler_in_debug(pywarnlogger):
     assert logging.StreamHandler in [x.__class__ for x in logger.handlers]
 
 
+def test_sentry_handler_attached_to_app_logger():
+    from invenio_logging.sentry import InvenioLoggingSentry
+    from raven.handlers.logging import SentryHandler
+    app = Flask('testapp')
+    app.config['SENTRY_DSN'] = 'http://user:pw@localhost/0'
+    InvenioLoggingSentry(app)
+    assert any(
+        [
+            isinstance(logger, SentryHandler) for logger in app.logger.handlers
+        ]
+    )
+
+
 def test_pywarnings(pywarnlogger):
     """Test celery."""
     from invenio_logging.sentry import InvenioLoggingSentry
