@@ -35,7 +35,7 @@ class Sentry6(Sentry):
     """Compatibility layer for Sentry."""
 
     def get_user_info(self, request):
-        """Custom implementation."""
+        """Implement custom getter."""
         if not current_user.is_authenticated:
             return {}
 
