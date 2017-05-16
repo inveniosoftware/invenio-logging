@@ -27,12 +27,6 @@
 from __future__ import print_function
 
 import os
-import sys
-
-import sphinx.environment
-
-# Plug example application into module path
-sys.path.append('examples')
 
 # -- General configuration ------------------------------------------------
 
@@ -80,7 +74,9 @@ author = u'CERN'
 
 # Get the version string. Cannot be done with import!
 g = {}
-with open(os.path.join('..', 'invenio_logging', 'version.py'), 'rt') as fp:
+with open(os.path.join(os.path.dirname(__file__), '..',
+                       'invenio_logging', 'version.py'),
+          'rt') as fp:
     exec(fp.read(), g)
     version = g['__version__']
 
