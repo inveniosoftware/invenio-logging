@@ -80,7 +80,7 @@ class InvenioLoggingSentry(InvenioLoggingBase):
             level=level
         )
 
-        app.logger.addHandler(SentryHandler(sentry.client, level))
+        app.logger.addHandler(SentryHandler(client=sentry.client, level=level))
 
         # Capture warnings from warnings module
         if app.config['LOGGING_SENTRY_PYWARNINGS']:
