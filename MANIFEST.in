@@ -12,9 +12,7 @@ include *.sh
 include *.txt
 include .dockerignore
 include .editorconfig
-include .lgtm
 include LICENSE
-include MAINTAINERS
 include docs/requirements.txt
 include pytest.ini
 prune docs/_build
