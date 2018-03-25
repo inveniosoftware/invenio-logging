@@ -9,6 +9,9 @@
  Invenio-Logging
 =================
 
+.. image:: https://img.shields.io/github/license/inveniosoftware/invenio-logging.svg
+        :target: https://github.com/inveniosoftware/invenio-logging/blob/master/LICENSE
+
 .. image:: https://img.shields.io/travis/inveniosoftware/invenio-logging.svg
         :target: https://travis-ci.org/inveniosoftware/invenio-logging
 
