@@ -84,9 +84,6 @@ Set to a valid Python logging level: ``CRITICAL``, ``ERROR``, ``WARNING``,
 # ------
 # SENTRY
 # ------
-SENTRY_DSN = None
-"""Set SENTRY_DSN environment variable."""
-
 LOGGING_SENTRY_LEVEL = 'WARNING'
 """Sentry logging level.
 
@@ -105,6 +102,15 @@ LOGGING_SENTRY_CLASS = None
 This allows you to customize the Sentry extension class. In particular if you
 are logging to Sentry v6, you can set this to
 :class:`invenio_logging.sentry6.Sentry6`."""
+
+SENTRY_DSN = None
+"""Set SENTRY_DSN environment variable."""
+
+SENTRY_PROCESSORS = (
+    'raven.processors.SanitizePasswordsProcessor',
+    'invenio_logging.sentry.RequestIdProcessor',
+)
+"""Default Sentry event processors."""
 
 SENTRY_TRANSPORT = 'raven.transport.threaded.ThreadedHTTPTransport'
 """Default Sentry transport."""

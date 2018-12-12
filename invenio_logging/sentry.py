@@ -12,11 +12,24 @@ from __future__ import absolute_import, print_function
 
 import logging
 
+import pkg_resources
 import six
+from flask import g
 from werkzeug.utils import import_string
 
 from . import config
 from .ext import InvenioLoggingBase
+
+try:
+    pkg_resources.get_distribution('raven')
+    from raven.processors import Processor
+except pkg_resources.DistributionNotFound:
+    class Processor(object):
+        """Dummy class in case Sentry is not installed.."""
+
+        def __init__(self, *args, **kwargs):
+            """Do nothing."""
+            pass
 
 
 class InvenioLoggingSentry(InvenioLoggingBase):
@@ -44,7 +57,7 @@ class InvenioLoggingSentry(InvenioLoggingBase):
         """Install log handler."""
         from raven.contrib.celery import register_logger_signal, \
             register_signal
-        from raven.contrib.flask import Sentry
+        from raven.contrib.flask import Sentry, make_client
         from raven.handlers.logging import SentryHandler
 
         # Installs sentry in app.extensions['sentry']
@@ -88,3 +101,16 @@ class InvenioLoggingSentry(InvenioLoggingBase):
             logger = logging.getLogger('werkzeug')
             logger.setLevel(logging.INFO)
             logger.addHandler(logging.StreamHandler())
+
+
+class RequestIdProcessor(Processor):
+    """Sentry event request processor for adding the request id as a tag."""
+
+    def process(self, data, **kwargs):
+        """Process event data."""
+        data = super(RequestIdProcessor, self).process(data, **kwargs)
+        if g and hasattr(g, 'request_id'):
+            tags = data.get('tags', {})
+            tags['request_id'] = g.request_id
+            data['tags'] = tags
+        return data
