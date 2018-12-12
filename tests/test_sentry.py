@@ -15,10 +15,10 @@ import logging
 import httpretty
 import pytest
 from celery.utils.log import get_task_logger
-from flask import Flask, request
+from flask import Flask, g, request
 from flask_celeryext import create_celery_app
 from flask_login import LoginManager, UserMixin, login_user
-from mock import patch
+from mock import Mock, patch
 
 
 def test_init():
@@ -162,3 +162,21 @@ def test_sentry6():
             'id': '1',
             'name': 'viggo',
         }
+
+
+def test_request_id_processors():
+    """Test the processor which adds request id to the tags context."""
+    from invenio_logging.sentry import RequestIdProcessor
+    proc = RequestIdProcessor(Mock())
+    # Test without request context
+    assert proc.process({}) == {}
+    assert proc.process({'tags': {}}) == ({'tags': {}})
+    assert proc.process({'tags': {'myvar': 'val'}}) \
+        == {'tags': {'myvar': 'val'}}
+
+    # Test with request context
+    app = Flask('testpp')
+    with app.test_request_context('/'):
+        assert proc.process({'tags': {}}) == ({'tags': {}})
+        g.request_id = '12'
+        assert proc.process({'tags': {}}) == ({'tags': {'request_id': '12'}})
