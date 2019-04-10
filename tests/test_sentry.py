@@ -11,6 +11,7 @@
 from __future__ import absolute_import, print_function
 
 import logging
+import warnings
 
 import httpretty
 import pytest
@@ -72,7 +73,7 @@ def test_sentry_handler_attached_to_app_logger():
 
 
 def test_pywarnings(pywarnlogger):
-    """Test celery."""
+    """Test pywarnings."""
     from invenio_logging.sentry import InvenioLoggingSentry
     app = Flask('testapp')
     app.config.update(dict(
@@ -82,6 +83,40 @@ def test_pywarnings(pywarnlogger):
     assert len(pywarnlogger.handlers) == 0
     InvenioLoggingSentry(app)
     assert len(pywarnlogger.handlers) == 1
+
+
+def test_pywarnings_are_logged_once(pywarnlogger):
+    """Test pywarnings with logging capturing warnings."""
+    from raven.handlers.logging import SentryHandler
+    with patch.object(SentryHandler, 'emit') as sentry_emit:
+        from invenio_logging.sentry import InvenioLoggingSentry
+        logging.captureWarnings(True)
+        app = Flask('testapp')
+        app.config.update(dict(
+            SENTRY_DSN='http://user:pw@localhost/0',
+            LOGGING_SENTRY_PYWARNINGS=True,
+        ))
+        assert sentry_emit.call_count == 0
+        InvenioLoggingSentry(app)
+        warnings.warn('sentry test warning')
+        assert sentry_emit.call_count == 1
+
+
+def test_pywarnings_disabled_are_not_logged(pywarnlogger):
+    """Test pywarnings disabled with logging capturing warnings."""
+    from raven.handlers.logging import SentryHandler
+    with patch.object(SentryHandler, 'emit') as sentry_emit:
+        from invenio_logging.sentry import InvenioLoggingSentry
+        logging.captureWarnings(True)
+        app = Flask('testapp')
+        app.config.update(dict(
+            SENTRY_DSN='http://user:pw@localhost/0',
+            LOGGING_SENTRY_PYWARNINGS=False,
+        ))
+        assert sentry_emit.call_count == 0
+        InvenioLoggingSentry(app)
+        warnings.warn('sentry test warning')
+        assert sentry_emit.call_count == 0
 
 
 def test_import():

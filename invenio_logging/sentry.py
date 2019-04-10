@@ -55,6 +55,7 @@ class InvenioLoggingSentry(InvenioLoggingBase):
 
     def install_handler(self, app):
         """Install log handler."""
+        from raven.conf import EXCLUDE_LOGGER_DEFAULTS
         from raven.contrib.celery import register_logger_signal, \
             register_signal
         from raven.contrib.flask import Sentry, make_client
@@ -62,6 +63,11 @@ class InvenioLoggingSentry(InvenioLoggingBase):
 
         # Installs sentry in app.extensions['sentry']
         level = getattr(logging, app.config['LOGGING_SENTRY_LEVEL'])
+
+        logging_exclusions = None
+        if not app.config['LOGGING_SENTRY_PYWARNINGS']:
+            logging_exclusions = list(EXCLUDE_LOGGER_DEFAULTS)
+            logging_exclusions.append('py.warnings')
 
         # Get the Sentry class.
         cls = app.config['LOGGING_SENTRY_CLASS']
@@ -74,7 +80,8 @@ class InvenioLoggingSentry(InvenioLoggingBase):
         sentry = cls(
             app,
             logging=True,
-            level=level
+            level=level,
+            logging_exclusions=logging_exclusions,
         )
 
         app.logger.addHandler(SentryHandler(client=sentry.client, level=level))
