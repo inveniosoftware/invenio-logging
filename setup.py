@@ -34,7 +34,7 @@ extras_require = {
     ],
     'tests': tests_require,
     'sentry': [
-        'raven[flask]>=6.0',
+        'raven[flask]>=5.10.2,<6',
         'flask-celeryext>=0.2.2',
     ]
 }

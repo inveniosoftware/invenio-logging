@@ -15,6 +15,7 @@ import shutil
 import tempfile
 
 import pytest
+from mock import Mock, patch
 
 
 @pytest.yield_fixture()
@@ -31,3 +32,10 @@ def pywarnlogger():
     logger = logging.getLogger('py.warnings')
     yield logger
     logger.handlers = []
+
+@pytest.yield_fixture()
+def sentry_emit():
+    """Mock Sentry emit."""
+    from raven.handlers.logging import SentryHandler
+    with patch.object(SentryHandler, 'emit') as sentry_emit:
+        yield sentry_emit
