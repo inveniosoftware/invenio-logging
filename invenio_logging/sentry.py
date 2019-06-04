@@ -50,7 +50,7 @@ class InvenioLoggingSentry(InvenioLoggingBase):
     def init_config(self, app):
         """Initialize configuration."""
         for k in dir(config):
-            if k.startswith('LOGGING_SENTRY') or k.startswith('SENTRY_DSN'):
+            if k.startswith('LOGGING_SENTRY') or k.startswith('SENTRY_'):
                 app.config.setdefault(k, getattr(config, k))
 
     def install_handler(self, app):
