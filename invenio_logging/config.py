@@ -112,9 +112,5 @@ SENTRY_PROCESSORS = (
 )
 """Default Sentry event processors."""
 
-SENTRY_TRANSPORT = 'raven.transport.http.HTTPTransport'
-"""Default Sentry transport.
-
-Explicitly set due to Celery incompatibility with threaded transport
-(see note above).
-"""
+SENTRY_TRANSPORT = 'raven.transport.threaded.ThreadedHTTPTransport'
+"""Default Sentry transport."""
