@@ -8,6 +8,10 @@
 Changes
 =======
 
+Version 1.1.2 (released 2019-06-20)
+
+- Change the Sentry transport class to threaded.
+
 Version 1.1.1 (released 2019-06-19)
 
 - Fixed incorrect warnings logging by Sentry.
