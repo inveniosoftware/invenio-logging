@@ -82,6 +82,7 @@ For more information about logging please see:
 
  * http://flask.pocoo.org/docs/0.11/quickstart/#logging
  * https://docs.python.org/3/library/logging.html
+
 """
 
 from __future__ import absolute_import, print_function
