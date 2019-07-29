@@ -35,8 +35,9 @@ extras_require = {
     'tests': tests_require,
     'sentry': [
         'raven[flask]>=5.10.2,<6',
-        'flask-celeryext>=0.2.2',
-    ]
+        'flask-celeryext>=0.2.2'],
+    'sentry-sdk':
+        ['sentry-sdk[flask]>=0.10.2']
 }
 
 extras_require['all'] = []

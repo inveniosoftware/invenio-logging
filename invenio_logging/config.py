@@ -84,6 +84,10 @@ Set to a valid Python logging level: ``CRITICAL``, ``ERROR``, ``WARNING``,
 # ------
 # SENTRY
 # ------
+
+SENTRY_SDK = True
+"""Use of sentry-python SDK, if false raven will be used. """
+
 LOGGING_SENTRY_LEVEL = 'WARNING'
 """Sentry logging level.
 

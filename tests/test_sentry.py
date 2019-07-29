@@ -34,7 +34,18 @@ def test_init():
     app.config['SENTRY_DSN'] = 'http://user:pw@localhost/0'
     InvenioLoggingSentry(app)
     assert 'invenio-logging-sentry' in app.extensions
-    assert 'sentry' in app.extensions
+    if app.config['SENTRY_SDK'] is False:
+        assert 'sentry' in app.extensions
+    else:
+        from sentry_sdk.hub import Hub
+        from sentry_sdk.integrations.flask import FlaskIntegration
+        from sentry_sdk.integrations.celery import CeleryIntegration
+
+        assert Hub.current and Hub.client
+        if app.config['LOGGING_SENTRY_CELERY']:
+            assert Hub.current.get_integration(CeleryIntegration)
+        else:
+            assert Hub.current.get_integration(FlaskIntegration)
 
 
 def test_custom_class(pywarnlogger):
@@ -43,6 +54,7 @@ def test_custom_class(pywarnlogger):
     app = Flask('testapp')
     app.config['SENTRY_DSN'] = 'http://user:pw@localhost/0'
     app.config['LOGGING_SENTRY_CLASS'] = 'invenio_logging.sentry6:Sentry6'
+    app.config['SENTRY_SDK'] = False
     InvenioLoggingSentry(app)
     from invenio_logging.sentry6 import Sentry6
     assert isinstance(app.extensions['sentry'], Sentry6)
@@ -54,6 +66,7 @@ def test_stream_handler_in_debug(pywarnlogger):
     app = Flask('testapp')
     app.debug = True
     app.config['SENTRY_DSN'] = 'http://user:pw@localhost/0'
+    app.config['SENTRY_SDK'] = False
     InvenioLoggingSentry(app)
     logger = logging.getLogger('werkzeug')
     assert logging.StreamHandler in [x.__class__ for x in logger.handlers]
@@ -64,6 +77,7 @@ def test_sentry_handler_attached_to_app_logger():
     from raven.handlers.logging import SentryHandler
     app = Flask('testapp')
     app.config['SENTRY_DSN'] = 'http://user:pw@localhost/0'
+    app.config['SENTRY_SDK'] = False
     InvenioLoggingSentry(app)
     assert any(
         [
@@ -78,6 +92,7 @@ def test_pywarnings(pywarnlogger):
     app = Flask('testapp')
     app.config.update(dict(
         SENTRY_DSN='http://user:pw@localhost/0',
+        SENTRY_SDK=False,
         LOGGING_SENTRY_PYWARNINGS=True,
     ))
     assert len(pywarnlogger.handlers) == 0
@@ -94,6 +109,7 @@ def test_pywarnings_are_logged_once(pywarnlogger, sentry_emit):
     app.config.update(dict(
         SENTRY_DSN='http://user:pw@localhost/0',
         LOGGING_SENTRY_PYWARNINGS=True,
+        SENTRY_SDK=False
     ))
     assert sentry_emit.call_count == 0
     InvenioLoggingSentry(app)
@@ -110,6 +126,7 @@ def test_pywarnings_disabled_are_not_logged(pywarnlogger, sentry_emit):
     app.config.update(dict(
         SENTRY_DSN='http://user:pw@localhost/0',
         LOGGING_SENTRY_PYWARNINGS=False,
+        SENTRY_SDK=False
     ))
     assert sentry_emit.call_count == 0
     InvenioLoggingSentry(app)
@@ -129,6 +146,7 @@ def test_import():
 
         app = Flask('testapp')
         app.config['SENTRY_DSN'] = '....'
+        app.config['SENTRY_SDK'] = False
         pytest.raises(ImportError, InvenioLoggingSentry, app)
 
 
@@ -140,6 +158,7 @@ def test_celery():
     app.config.update(dict(
         SENTRY_DSN='http://user:pw@localhost/0',
         SENTRY_TRANSPORT='raven.transport.http.HTTPTransport',
+        SENTRY_SDK=False,
         LOGGING_SENTRY_CELERY=True,
         CELERY_ALWAYS_EAGER=True,
         CELERY_RESULT_BACKEND="cache",
@@ -174,6 +193,7 @@ def test_sentry6():
     app = Flask('testapp')
     app.config.update(dict(
         SENTRY_DSN='http://user:pw@localhost/0',
+        SENTRY_SDK=False,
         LOGGING_SENTRY_CLASS='invenio_logging.sentry6:Sentry6',
         SENTRY_USER_ATTRS=['name'],
         SECRET_KEY='CHANGEME',
