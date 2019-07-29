@@ -11,6 +11,7 @@
 from __future__ import absolute_import, print_function
 
 import logging
+import warnings
 
 import pkg_resources
 import six
@@ -55,35 +56,72 @@ class InvenioLoggingSentry(InvenioLoggingBase):
 
     def install_handler(self, app):
         """Install log handler."""
-        from raven.conf import EXCLUDE_LOGGER_DEFAULTS
-        from raven.contrib.celery import register_logger_signal, \
-            register_signal
-        from raven.contrib.flask import Sentry, make_client
-        from raven.handlers.logging import SentryHandler
-
-        # Installs sentry in app.extensions['sentry']
         level = getattr(logging, app.config['LOGGING_SENTRY_LEVEL'])
-
         logging_exclusions = None
         if not app.config['LOGGING_SENTRY_PYWARNINGS']:
-            logging_exclusions = list(EXCLUDE_LOGGER_DEFAULTS)
-            logging_exclusions.append('py.warnings')
+            logging_exclusions = (
+                'raven',
+                'gunicorn',
+                'south',
+                'sentry.errors',
+                'django.request',
+                'dill',
+                'py.warnings')
+        if app.config['SENTRY_SDK']:
+            self.install_sentry_sdk_handler(app, logging_exclusions, level)
+        else:
+            self.install_raven_handler(app, logging_exclusions, level)
 
-        # Get the Sentry class.
+        # Werkzeug only adds a stream handler if there's no other handlers
+        # defined, so when Sentry adds a log handler no output is
+        # received from Werkzeug unless we install a console handler
+        # here on the werkzeug logger.
+        if app.debug:
+            logger = logging.getLogger('werkzeug')
+            logger.setLevel(logging.INFO)
+            logger.addHandler(logging.StreamHandler())
+
+    def install_sentry_sdk_handler(self, app, logging_exclusions, level):
+        """Install sentry-python sdk log handler."""
+        import sentry_sdk
+        from sentry_sdk.integrations.flask import FlaskIntegration
+        from sentry_sdk.integrations.celery import CeleryIntegration
+        from sentry_sdk import configure_scope
+
+        integrations = [FlaskIntegration()]
+        if app.config['LOGGING_SENTRY_CELERY']:
+            integrations.append(CeleryIntegration())
+
+        sentry_sdk.init(
+            dsn=app.config['SENTRY_DSN'],
+            in_app_exclude=logging_exclusions,
+            integrations=integrations,
+            before_send=self.add_request_id_sentry_python,
+        )
+        with configure_scope() as scope:
+            scope.level = level
+
+    def install_raven_handler(self, app, logging_exclusions, level):
+        """Install raven log handler."""
+        warnings.warn('The Raven library will be depricated.',
+                      PendingDeprecationWarning)
+        from raven.contrib.celery import register_logger_signal, \
+            register_signal
+        from raven.contrib.flask import Sentry
+        from raven.handlers.logging import SentryHandler
+
         cls = app.config['LOGGING_SENTRY_CLASS']
         if cls:
             if isinstance(cls, six.string_types):
                 cls = import_string(cls)
         else:
             cls = Sentry
-
         sentry = cls(
             app,
             logging=True,
             level=level,
             logging_exclusions=logging_exclusions,
         )
-
         app.logger.addHandler(SentryHandler(client=sentry.client, level=level))
 
         # Capture warnings from warnings module
@@ -100,14 +138,13 @@ class InvenioLoggingSentry(InvenioLoggingBase):
                 register_logger_signal(sentry.client)
             register_signal(sentry.client)
 
-        # Werkzeug only adds a stream handler if there's no other handlers
-        # defined, so when Sentry adds a log handler no output is
-        # received from Werkzeug unless we install a console handler
-        # here on the werkzeug logger.
-        if app.debug:
-            logger = logging.getLogger('werkzeug')
-            logger.setLevel(logging.INFO)
-            logger.addHandler(logging.StreamHandler())
+    def add_request_id_sentry_python(self, event, hint):
+        """Add the request id as a tag."""
+        if g and hasattr(g, 'request_id'):
+            tags = event.get('tags') or []
+            tags.append(['request_id', g.request_id])
+            event['tags'] = tags
+        return event
 
 
 class RequestIdProcessor(Processor):
