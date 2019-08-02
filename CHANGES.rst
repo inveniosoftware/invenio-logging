@@ -8,6 +8,8 @@
 Changes
 =======
 
+Version 1.2.0 (released 2019-08-02)
+
 Version 1.1.1 (released 2019-06-19)
 
 - Fixed incorrect warnings logging by Sentry.
