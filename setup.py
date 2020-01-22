@@ -50,7 +50,7 @@ setup_requires = [
 
 install_requires = [
     'Flask>=0.11.1',
-    'six>=1.10.0',
+    'six>=1.12.0',
 ]
 
 packages = find_packages()
