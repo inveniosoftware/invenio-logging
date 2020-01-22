@@ -7,6 +7,10 @@
 
 Changes
 =======
+Version 1.2.1 (released 2020-01-22)
+
+- increased minimal six version
+- changed documentation stale urls
 
 Version 1.2.0 (released 2019-08-02)
 
