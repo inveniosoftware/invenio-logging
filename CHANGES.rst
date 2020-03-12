@@ -7,6 +7,11 @@
 
 Changes
 =======
+Version 1.3.0 (released 2020-03-12)
+
+- drop Python 2.7 support
+- change Flask dependency to invenio-base
+
 Version 1.2.1 (released 2020-01-22)
 
 - increased minimal six version
