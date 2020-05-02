@@ -59,7 +59,7 @@ class InvenioLoggingFS(InvenioLoggingBase):
         basedir = dirname(app.config['LOGGING_FS_LOGFILE'])
         if not exists(basedir):
             raise ValueError(
-                'Log directory {0} does not exists.'.format(basedir))
+                'Log directory {0} does not exist.'.format(basedir))
 
         handler = RotatingFileHandler(
             app.config['LOGGING_FS_LOGFILE'],
