@@ -84,9 +84,9 @@ class InvenioLoggingSentry(InvenioLoggingBase):
     def install_sentry_sdk_handler(self, app, logging_exclusions, level):
         """Install sentry-python sdk log handler."""
         import sentry_sdk
-        from sentry_sdk.integrations.flask import FlaskIntegration
-        from sentry_sdk.integrations.celery import CeleryIntegration
         from sentry_sdk import configure_scope
+        from sentry_sdk.integrations.celery import CeleryIntegration
+        from sentry_sdk.integrations.flask import FlaskIntegration
 
         integrations = [FlaskIntegration()]
         if app.config['LOGGING_SENTRY_CELERY']:
