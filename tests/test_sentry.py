@@ -38,8 +38,8 @@ def test_init():
         assert 'sentry' in app.extensions
     else:
         from sentry_sdk.hub import Hub
-        from sentry_sdk.integrations.flask import FlaskIntegration
         from sentry_sdk.integrations.celery import CeleryIntegration
+        from sentry_sdk.integrations.flask import FlaskIntegration
 
         assert Hub.current and Hub.client
         if app.config['LOGGING_SENTRY_CELERY']:
@@ -73,8 +73,9 @@ def test_stream_handler_in_debug(pywarnlogger):
 
 
 def test_sentry_handler_attached_to_app_logger():
-    from invenio_logging.sentry import InvenioLoggingSentry
     from raven.handlers.logging import SentryHandler
+
+    from invenio_logging.sentry import InvenioLoggingSentry
     app = Flask('testapp')
     app.config['SENTRY_DSN'] = 'http://user:pw@localhost/0'
     app.config['SENTRY_SDK'] = False
@@ -103,6 +104,7 @@ def test_pywarnings(pywarnlogger):
 def test_pywarnings_are_logged_once(pywarnlogger, sentry_emit):
     """Test pywarnings with logging capturing warnings."""
     from raven.handlers.logging import SentryHandler
+
     from invenio_logging.sentry import InvenioLoggingSentry
     logging.captureWarnings(True)
     app = Flask('testapp')
@@ -120,6 +122,7 @@ def test_pywarnings_are_logged_once(pywarnlogger, sentry_emit):
 def test_pywarnings_disabled_are_not_logged(pywarnlogger, sentry_emit):
     """Test pywarnings disabled with logging capturing warnings."""
     from raven.handlers.logging import SentryHandler
+
     from invenio_logging.sentry import InvenioLoggingSentry
     logging.captureWarnings(True)
     app = Flask('testapp')
