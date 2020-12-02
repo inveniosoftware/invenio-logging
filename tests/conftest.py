@@ -33,6 +33,7 @@ def pywarnlogger():
     yield logger
     logger.handlers = []
 
+
 @pytest.yield_fixture()
 def sentry_emit():
     """Mock Sentry emit."""

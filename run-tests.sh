@@ -7,7 +7,6 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 
 pydocstyle invenio_logging && \
-isort invenio_logging tests --check-only --diff && \
-check-manifest --ignore ".travis-*" && \
+check-manifest --ignore "*-requirements.txt" && \
 sphinx-build -qnNW docs docs/_build/html && \
 python setup.py test

@@ -16,16 +16,11 @@ readme = open('README.rst').read()
 history = open('CHANGES.rst').read()
 
 tests_require = [
-    'check-manifest>=0.25',
-    'coverage>=4.0',
     'flask-login>=0.3.2,<0.5.0',
     'httpretty>=0.8.14',
-    'isort>=4.2.2',
     'mock>=1.3.0',
-    'pydocstyle>=1.0.0',
-    'pytest-cov>=1.8.0',
-    'pytest-pep8>=1.0.6',
-    'pytest>=2.8.0',
+    'pytest-invenio>=1.4.0',
+    'iniconfig>=1.1.1',
 ]
 
 extras_require = {
@@ -35,7 +30,7 @@ extras_require = {
     'tests': tests_require,
     'sentry': [
         'raven[flask]>=6',
-        'flask-celeryext>=0.2.2'],
+        'flask-celeryext>=0.3.4'],
     'sentry-sdk':
         ['sentry-sdk[flask]>=0.10.2']
 }
@@ -49,7 +44,7 @@ setup_requires = [
 ]
 
 install_requires = [
-    'invenio-base>=1.2.2',
+    'invenio-base>=1.2.3',
 ]
 
 packages = find_packages()
