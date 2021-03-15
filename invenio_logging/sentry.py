@@ -85,12 +85,11 @@ class InvenioLoggingSentry(InvenioLoggingBase):
         """Install sentry-python sdk log handler."""
         import sentry_sdk
         from sentry_sdk import configure_scope
-        from sentry_sdk.integrations.celery import CeleryIntegration
         from sentry_sdk.integrations.flask import FlaskIntegration
 
         integrations = [FlaskIntegration()]
-        if app.config['LOGGING_SENTRY_CELERY']:
-            integrations.append(CeleryIntegration())
+        for integration in app.config.get('LOGGING_SENTRY_INTEGRATIONS', []):
+            integrations.append(integration)
 
         sentry_sdk.init(
             dsn=app.config['SENTRY_DSN'],
@@ -129,14 +128,13 @@ class InvenioLoggingSentry(InvenioLoggingBase):
             self.capture_pywarnings(
                 SentryHandler(sentry.client))
 
-        # Setup Celery logging to Sentry
-        if app.config['LOGGING_SENTRY_CELERY']:
-            try:
-                register_logger_signal(sentry.client, loglevel=level)
-            except TypeError:
-                # Compatibility mode for Raven<=5.1.0
-                register_logger_signal(sentry.client)
-            register_signal(sentry.client)
+        # Setup logging to Sentry
+        try:
+            register_logger_signal(sentry.client, loglevel=level)
+        except TypeError:
+            # Compatibility mode for Raven<=5.1.0
+            register_logger_signal(sentry.client)
+        register_signal(sentry.client)
 
     def add_request_id_sentry_python(self, event, hint):
         """Add the request id as a tag."""

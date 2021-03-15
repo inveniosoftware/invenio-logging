@@ -97,8 +97,13 @@ Defaults to only reporting errors and warnings.
 LOGGING_SENTRY_PYWARNINGS = False
 """Enable logging of Python warnings to Sentry."""
 
-LOGGING_SENTRY_CELERY = False
-"""Configure Celery to send logging to Sentry."""
+LOGGING_SENTRY_INTEGRATIONS = []
+"""Addidionally Senty integrations for logging."""
+"""https://docs.sentry.io/platforms/python/guides/celery/"""
+"""https://docs.sentry.io/platforms/python/configuration/integrations/"""
+
+LOGGING_SENTRY_SQLALCHEMY = False
+"""Configure SQLAlchemy to send logging to Sentry."""
 
 LOGGING_SENTRY_CLASS = None
 """Import path of sentry Flask extension class.

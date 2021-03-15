@@ -38,14 +38,12 @@ def test_init():
         assert 'sentry' in app.extensions
     else:
         from sentry_sdk.hub import Hub
-        from sentry_sdk.integrations.celery import CeleryIntegration
         from sentry_sdk.integrations.flask import FlaskIntegration
 
         assert Hub.current and Hub.client
-        if app.config['LOGGING_SENTRY_CELERY']:
-            assert Hub.current.get_integration(CeleryIntegration)
-        else:
-            assert Hub.current.get_integration(FlaskIntegration)
+        assert Hub.current.get_integration(FlaskIntegration)
+        for integration in app.config.get('LOGGING_SENTRY_INTEGRATIONS'):
+            assert Hub.current.get_integration(integration)
 
 
 def test_custom_class(pywarnlogger):
@@ -156,13 +154,15 @@ def test_import():
 @httpretty.activate
 def test_celery():
     """Test celery."""
+    from sentry_sdk.integrations.celery import CeleryIntegration
+
     from invenio_logging.sentry import InvenioLoggingSentry
     app = Flask('testapp')
     app.config.update(dict(
         SENTRY_DSN='http://user:pw@localhost/0',
         SENTRY_TRANSPORT='raven.transport.http.HTTPTransport',
         SENTRY_SDK=False,
-        LOGGING_SENTRY_CELERY=True,
+        LOGGING_SENTRY_INTEGRATIONS=[CeleryIntegration()],
         CELERY_ALWAYS_EAGER=True,
         CELERY_RESULT_BACKEND="cache",
         CELERY_CACHE_BACKEND="memory",
