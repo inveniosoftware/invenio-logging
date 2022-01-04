@@ -100,6 +100,12 @@ LOGGING_SENTRY_PYWARNINGS = False
 LOGGING_SENTRY_CELERY = False
 """Configure Celery to send logging to Sentry."""
 
+LOGGING_SENTRY_SQLALCHEMY = False
+"""Configure SQL Alchemy to send logging to Sentry."""
+
+LOGGING_SENTRY_REDIS = False
+"""Configure REDIS to send logging to Sentry."""
+
 LOGGING_SENTRY_CLASS = None
 """Import path of sentry Flask extension class.
 
