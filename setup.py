@@ -19,7 +19,7 @@ tests_require = [
     'flask-login>=0.3.2,<0.5.0',
     'httpretty>=0.8.14',
     'mock>=1.3.0',
-    'pytest-invenio>=1.4.0',
+    'pytest-invenio>=1.4.2',
     'iniconfig>=1.1.1',
 ]
 
@@ -32,7 +32,7 @@ extras_require = {
         'raven[flask]>=6',
         'flask-celeryext>=0.3.4'],
     'sentry-sdk':
-        ['sentry-sdk[flask]>=0.10.2']
+        ['sentry-sdk[flask]>=1.0.0']
 }
 
 extras_require['all'] = []
@@ -44,7 +44,8 @@ setup_requires = [
 ]
 
 install_requires = [
-    'invenio-base>=1.2.3',
+    'invenio-base>=1.2.5',
+    'invenio-db>=1.0.12',
 ]
 
 packages = find_packages()

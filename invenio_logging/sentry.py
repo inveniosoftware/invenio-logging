@@ -87,10 +87,16 @@ class InvenioLoggingSentry(InvenioLoggingBase):
         from sentry_sdk import configure_scope
         from sentry_sdk.integrations.celery import CeleryIntegration
         from sentry_sdk.integrations.flask import FlaskIntegration
+        from sentry_sdk.integrations.redis import RedisIntegration
+        from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
         integrations = [FlaskIntegration()]
         if app.config['LOGGING_SENTRY_CELERY']:
             integrations.append(CeleryIntegration())
+        if app.config['LOGGING_SENTRY_SQLALCHEMY']:
+            integrations.append(SqlalchemyIntegration())
+        if app.config['LOGGING_SENTRY_REDIS']:
+            integrations.append(RedisIntegration())
 
         sentry_sdk.init(
             dsn=app.config['SENTRY_DSN'],
