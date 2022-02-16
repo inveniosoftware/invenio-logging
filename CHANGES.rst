@@ -7,6 +7,11 @@
 
 Changes
 =======
+
+Version 1.3.1 (released 2022-02-16)
+
+- Adds support for logging SQL queries and Redis calls to Sentry.
+
 Version 1.3.0 (released 2020-03-12)
 
 - drop Python 2.7 support
