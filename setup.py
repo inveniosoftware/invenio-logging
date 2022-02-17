@@ -30,9 +30,10 @@ extras_require = {
     'tests': tests_require,
     'sentry': [
         'raven[flask]>=6',
-        'flask-celeryext>=0.3.4'],
-    'sentry-sdk':
-        ['sentry-sdk[flask]>=1.0.0']
+    ],
+    'sentry-sdk':[
+        'sentry-sdk[flask]>=1.0.0'
+    ]
 }
 
 extras_require['all'] = []
@@ -44,7 +45,7 @@ setup_requires = [
 ]
 
 install_requires = [
-    'invenio-base>=1.2.5',
+    'invenio-celery>=1.2.4',
     'invenio-db>=1.0.12',
 ]
 
