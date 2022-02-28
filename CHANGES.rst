@@ -8,6 +8,10 @@
 Changes
 =======
 
+Version 1.3.2 (released 2022-02-28)
+
+- Fix dependency graph issue.
+
 Version 1.3.1 (released 2022-02-16)
 
 - Adds support for logging SQL queries and Redis calls to Sentry.
