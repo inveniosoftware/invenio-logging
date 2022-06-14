@@ -7,7 +7,12 @@
 # Invenio is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-pydocstyle invenio_logging && \
-check-manifest && \
-sphinx-build -qnNW docs docs/_build/html && \
-python setup.py test
+# Quit on errors
+set -o errexit
+
+# Quit on unbound symbols
+set -o nounset
+
+python -m check_manifest
+python -m sphinx.cmd.build -qnNW docs docs/_build/html
+python -m pytest
