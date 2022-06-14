@@ -26,23 +26,23 @@ def test_init():
     """Test initialization."""
     from invenio_logging.sentry import InvenioLoggingSentry
 
-    app = Flask('testapp')
+    app = Flask("testapp")
     InvenioLoggingSentry(app)
-    assert 'invenio-logging-sentry' not in app.extensions
+    assert "invenio-logging-sentry" not in app.extensions
 
-    app = Flask('testapp')
-    app.config['SENTRY_DSN'] = 'http://user:pw@localhost/0'
+    app = Flask("testapp")
+    app.config["SENTRY_DSN"] = "http://user:pw@localhost/0"
     InvenioLoggingSentry(app)
-    assert 'invenio-logging-sentry' in app.extensions
-    if app.config['SENTRY_SDK'] is False:
-        assert 'sentry' in app.extensions
+    assert "invenio-logging-sentry" in app.extensions
+    if app.config["SENTRY_SDK"] is False:
+        assert "sentry" in app.extensions
     else:
         from sentry_sdk.hub import Hub
         from sentry_sdk.integrations.celery import CeleryIntegration
         from sentry_sdk.integrations.flask import FlaskIntegration
 
         assert Hub.current and Hub.client
-        if app.config['LOGGING_SENTRY_CELERY']:
+        if app.config["LOGGING_SENTRY_CELERY"]:
             assert Hub.current.get_integration(CeleryIntegration)
         else:
             assert Hub.current.get_integration(FlaskIntegration)
@@ -51,24 +51,27 @@ def test_init():
 def test_custom_class(pywarnlogger):
     """Test stream handler."""
     from invenio_logging.sentry import InvenioLoggingSentry
-    app = Flask('testapp')
-    app.config['SENTRY_DSN'] = 'http://user:pw@localhost/0'
-    app.config['LOGGING_SENTRY_CLASS'] = 'invenio_logging.sentry6:Sentry6'
-    app.config['SENTRY_SDK'] = False
+
+    app = Flask("testapp")
+    app.config["SENTRY_DSN"] = "http://user:pw@localhost/0"
+    app.config["LOGGING_SENTRY_CLASS"] = "invenio_logging.sentry6:Sentry6"
+    app.config["SENTRY_SDK"] = False
     InvenioLoggingSentry(app)
     from invenio_logging.sentry6 import Sentry6
-    assert isinstance(app.extensions['sentry'], Sentry6)
+
+    assert isinstance(app.extensions["sentry"], Sentry6)
 
 
 def test_stream_handler_in_debug(pywarnlogger):
     """Test stream handler."""
     from invenio_logging.sentry import InvenioLoggingSentry
-    app = Flask('testapp')
+
+    app = Flask("testapp")
     app.debug = True
-    app.config['SENTRY_DSN'] = 'http://user:pw@localhost/0'
-    app.config['SENTRY_SDK'] = False
+    app.config["SENTRY_DSN"] = "http://user:pw@localhost/0"
+    app.config["SENTRY_SDK"] = False
     InvenioLoggingSentry(app)
-    logger = logging.getLogger('werkzeug')
+    logger = logging.getLogger("werkzeug")
     assert logging.StreamHandler in [x.__class__ for x in logger.handlers]
 
 
@@ -76,26 +79,26 @@ def test_sentry_handler_attached_to_app_logger():
     from raven.handlers.logging import SentryHandler
 
     from invenio_logging.sentry import InvenioLoggingSentry
-    app = Flask('testapp')
-    app.config['SENTRY_DSN'] = 'http://user:pw@localhost/0'
-    app.config['SENTRY_SDK'] = False
+
+    app = Flask("testapp")
+    app.config["SENTRY_DSN"] = "http://user:pw@localhost/0"
+    app.config["SENTRY_SDK"] = False
     InvenioLoggingSentry(app)
-    assert any(
-        [
-            isinstance(logger, SentryHandler) for logger in app.logger.handlers
-        ]
-    )
+    assert any([isinstance(logger, SentryHandler) for logger in app.logger.handlers])
 
 
 def test_pywarnings(pywarnlogger):
     """Test pywarnings."""
     from invenio_logging.sentry import InvenioLoggingSentry
-    app = Flask('testapp')
-    app.config.update(dict(
-        SENTRY_DSN='http://user:pw@localhost/0',
-        SENTRY_SDK=False,
-        LOGGING_SENTRY_PYWARNINGS=True,
-    ))
+
+    app = Flask("testapp")
+    app.config.update(
+        dict(
+            SENTRY_DSN="http://user:pw@localhost/0",
+            SENTRY_SDK=False,
+            LOGGING_SENTRY_PYWARNINGS=True,
+        )
+    )
     assert len(pywarnlogger.handlers) == 0
     InvenioLoggingSentry(app)
     assert len(pywarnlogger.handlers) == 1
@@ -106,16 +109,19 @@ def test_pywarnings_are_logged_once(pywarnlogger, sentry_emit):
     from raven.handlers.logging import SentryHandler
 
     from invenio_logging.sentry import InvenioLoggingSentry
+
     logging.captureWarnings(True)
-    app = Flask('testapp')
-    app.config.update(dict(
-        SENTRY_DSN='http://user:pw@localhost/0',
-        LOGGING_SENTRY_PYWARNINGS=True,
-        SENTRY_SDK=False
-    ))
+    app = Flask("testapp")
+    app.config.update(
+        dict(
+            SENTRY_DSN="http://user:pw@localhost/0",
+            LOGGING_SENTRY_PYWARNINGS=True,
+            SENTRY_SDK=False,
+        )
+    )
     assert sentry_emit.call_count == 0
     InvenioLoggingSentry(app)
-    warnings.warn('sentry test warning')
+    warnings.warn("sentry test warning")
     assert sentry_emit.call_count == 1
 
 
@@ -124,32 +130,36 @@ def test_pywarnings_disabled_are_not_logged(pywarnlogger, sentry_emit):
     from raven.handlers.logging import SentryHandler
 
     from invenio_logging.sentry import InvenioLoggingSentry
+
     logging.captureWarnings(True)
-    app = Flask('testapp')
-    app.config.update(dict(
-        SENTRY_DSN='http://user:pw@localhost/0',
-        LOGGING_SENTRY_PYWARNINGS=False,
-        SENTRY_SDK=False
-    ))
+    app = Flask("testapp")
+    app.config.update(
+        dict(
+            SENTRY_DSN="http://user:pw@localhost/0",
+            LOGGING_SENTRY_PYWARNINGS=False,
+            SENTRY_SDK=False,
+        )
+    )
     assert sentry_emit.call_count == 0
     InvenioLoggingSentry(app)
-    warnings.warn('sentry test warning')
+    warnings.warn("sentry test warning")
     assert sentry_emit.call_count == 0
 
 
 def test_import():
     """Test that raven is not required."""
-    with patch('raven.contrib.flask.Sentry') as mod:
+    with patch("raven.contrib.flask.Sentry") as mod:
         mod.side_effect = ImportError
         # We can import and install extension with out hitting the import
         # unless SENTRY_DSN is set.
         from invenio_logging.sentry import InvenioLoggingSentry
-        app = Flask('testapp')
+
+        app = Flask("testapp")
         InvenioLoggingSentry(app)
 
-        app = Flask('testapp')
-        app.config['SENTRY_DSN'] = '....'
-        app.config['SENTRY_SDK'] = False
+        app = Flask("testapp")
+        app.config["SENTRY_DSN"] = "...."
+        app.config["SENTRY_SDK"] = False
         pytest.raises(ImportError, InvenioLoggingSentry, app)
 
 
@@ -157,50 +167,57 @@ def test_import():
 def test_celery():
     """Test celery."""
     from invenio_logging.sentry import InvenioLoggingSentry
-    app = Flask('testapp')
-    app.config.update(dict(
-        SENTRY_DSN='http://user:pw@localhost/0',
-        SENTRY_TRANSPORT='raven.transport.http.HTTPTransport',
-        SENTRY_SDK=False,
-        LOGGING_SENTRY_CELERY=True,
-        CELERY_ALWAYS_EAGER=True,
-        CELERY_RESULT_BACKEND="cache",
-        CELERY_CACHE_BACKEND="memory",
-        CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
-    ))
+
+    app = Flask("testapp")
+    app.config.update(
+        dict(
+            SENTRY_DSN="http://user:pw@localhost/0",
+            SENTRY_TRANSPORT="raven.transport.http.HTTPTransport",
+            SENTRY_SDK=False,
+            LOGGING_SENTRY_CELERY=True,
+            CELERY_ALWAYS_EAGER=True,
+            CELERY_RESULT_BACKEND="cache",
+            CELERY_CACHE_BACKEND="memory",
+            CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
+        )
+    )
     InvenioLoggingSentry(app)
     celery = create_celery_app(app)
 
     @celery.task
     def test_task():
         logger = get_task_logger(__name__)
-        logger.error('CELERYTEST')
+        logger.error("CELERYTEST")
 
     httpretty.register_uri(
         httpretty.POST,
-        'http://localhost/api/0/store/',
+        "http://localhost/api/0/store/",
         body='[{"title": "Test"}]',
-        content_type='application/json',
+        content_type="application/json",
         status=200,
     )
     test_task.delay()
     # Give sentry time to send request
     from time import sleep
+
     sleep(1)
-    assert httpretty.last_request().path == '/api/0/store/'
+    assert httpretty.last_request().path == "/api/0/store/"
 
 
 def test_sentry6():
     """Test Sentry 6."""
     from invenio_logging.sentry import InvenioLoggingSentry
-    app = Flask('testapp')
-    app.config.update(dict(
-        SENTRY_DSN='http://user:pw@localhost/0',
-        SENTRY_SDK=False,
-        LOGGING_SENTRY_CLASS='invenio_logging.sentry6:Sentry6',
-        SENTRY_USER_ATTRS=['name'],
-        SECRET_KEY='CHANGEME',
-    ))
+
+    app = Flask("testapp")
+    app.config.update(
+        dict(
+            SENTRY_DSN="http://user:pw@localhost/0",
+            SENTRY_SDK=False,
+            LOGGING_SENTRY_CLASS="invenio_logging.sentry6:Sentry6",
+            SENTRY_USER_ATTRS=["name"],
+            SECRET_KEY="CHANGEME",
+        )
+    )
     InvenioLoggingSentry(app)
     LoginManager(app)
 
@@ -209,30 +226,30 @@ def test_sentry6():
             self.id = user_id
             self.name = name
 
-    with app.test_request_context('/'):
-        assert app.extensions['sentry'].get_user_info(request) == {}
+    with app.test_request_context("/"):
+        assert app.extensions["sentry"].get_user_info(request) == {}
 
-    with app.test_request_context('/'):
-        login_user(User(1, 'viggo'))
-        assert app.extensions['sentry'].get_user_info(request) == {
-            'id': '1',
-            'name': 'viggo',
+    with app.test_request_context("/"):
+        login_user(User(1, "viggo"))
+        assert app.extensions["sentry"].get_user_info(request) == {
+            "id": "1",
+            "name": "viggo",
         }
 
 
 def test_request_id_processors():
     """Test the processor which adds request id to the tags context."""
     from invenio_logging.sentry import RequestIdProcessor
+
     proc = RequestIdProcessor(Mock())
     # Test without request context
     assert proc.process({}) == {}
-    assert proc.process({'tags': {}}) == ({'tags': {}})
-    assert proc.process({'tags': {'myvar': 'val'}}) \
-        == {'tags': {'myvar': 'val'}}
+    assert proc.process({"tags": {}}) == ({"tags": {}})
+    assert proc.process({"tags": {"myvar": "val"}}) == {"tags": {"myvar": "val"}}
 
     # Test with request context
-    app = Flask('testpp')
-    with app.test_request_context('/'):
-        assert proc.process({'tags': {}}) == ({'tags': {}})
-        g.request_id = '12'
-        assert proc.process({'tags': {}}) == ({'tags': {'request_id': '12'}})
+    app = Flask("testpp")
+    with app.test_request_context("/"):
+        assert proc.process({"tags": {}}) == ({"tags": {}})
+        g.request_id = "12"
+        assert proc.process({"tags": {}}) == ({"tags": {"request_id": "12"}})

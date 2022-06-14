@@ -18,7 +18,7 @@ class AddRequestIdFilter(logging.Filter):
 
     def filter(self, record):
         """If request_id is set in flask.g, add it to log record."""
-        if g and hasattr(g, 'request_id'):
+        if g and hasattr(g, "request_id"):
             record.request_id = g.request_id
         return True
 

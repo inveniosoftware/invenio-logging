@@ -88,7 +88,7 @@ Set to a valid Python logging level: ``CRITICAL``, ``ERROR``, ``WARNING``,
 SENTRY_SDK = True
 """Use of sentry-python SDK, if false raven will be used. """
 
-LOGGING_SENTRY_LEVEL = 'WARNING'
+LOGGING_SENTRY_LEVEL = "WARNING"
 """Sentry logging level.
 
 Defaults to only reporting errors and warnings.
@@ -117,12 +117,12 @@ SENTRY_DSN = None
 """Set SENTRY_DSN environment variable."""
 
 SENTRY_PROCESSORS = (
-    'raven.processors.SanitizePasswordsProcessor',
-    'invenio_logging.sentry.RequestIdProcessor',
+    "raven.processors.SanitizePasswordsProcessor",
+    "invenio_logging.sentry.RequestIdProcessor",
 )
 """Default Sentry event processors."""
 
-SENTRY_TRANSPORT = 'raven.transport.http.HTTPTransport'
+SENTRY_TRANSPORT = "raven.transport.http.HTTPTransport"
 """Default Sentry transport.
 
 Explicitly set due to Celery incompatibility with threaded transport

@@ -19,7 +19,7 @@ from invenio_logging.ext import InvenioLoggingBase
 
 def test_init(pywarnlogger):
     """Test extension initialization."""
-    app = Flask('testapp')
+    app = Flask("testapp")
     ext = InvenioLoggingBase(app)
     assert len(pywarnlogger.handlers) == 0
 

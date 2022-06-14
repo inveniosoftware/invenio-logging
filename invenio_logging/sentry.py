@@ -22,9 +22,10 @@ from . import config
 from .ext import InvenioLoggingBase
 
 try:
-    pkg_resources.get_distribution('raven')
+    pkg_resources.get_distribution("raven")
     from raven.processors import Processor
 except pkg_resources.DistributionNotFound:
+
     class Processor(object):
         """Dummy class in case Sentry is not installed.."""
 
@@ -41,33 +42,34 @@ class InvenioLoggingSentry(InvenioLoggingBase):
         self.init_config(app)
 
         # Only configure Sentry if SENTRY_DSN is set.
-        if app.config['SENTRY_DSN'] is None:
+        if app.config["SENTRY_DSN"] is None:
             return
 
         self.install_handler(app)
 
-        app.extensions['invenio-logging-sentry'] = self
+        app.extensions["invenio-logging-sentry"] = self
 
     def init_config(self, app):
         """Initialize configuration."""
         for k in dir(config):
-            if k.startswith('LOGGING_SENTRY') or k.startswith('SENTRY_'):
+            if k.startswith("LOGGING_SENTRY") or k.startswith("SENTRY_"):
                 app.config.setdefault(k, getattr(config, k))
 
     def install_handler(self, app):
         """Install log handler."""
-        level = getattr(logging, app.config['LOGGING_SENTRY_LEVEL'])
+        level = getattr(logging, app.config["LOGGING_SENTRY_LEVEL"])
         logging_exclusions = None
-        if not app.config['LOGGING_SENTRY_PYWARNINGS']:
+        if not app.config["LOGGING_SENTRY_PYWARNINGS"]:
             logging_exclusions = (
-                'raven',
-                'gunicorn',
-                'south',
-                'sentry.errors',
-                'django.request',
-                'dill',
-                'py.warnings')
-        if app.config['SENTRY_SDK']:
+                "raven",
+                "gunicorn",
+                "south",
+                "sentry.errors",
+                "django.request",
+                "dill",
+                "py.warnings",
+            )
+        if app.config["SENTRY_SDK"]:
             self.install_sentry_sdk_handler(app, logging_exclusions, level)
         else:
             self.install_raven_handler(app, logging_exclusions, level)
@@ -77,7 +79,7 @@ class InvenioLoggingSentry(InvenioLoggingBase):
         # received from Werkzeug unless we install a console handler
         # here on the werkzeug logger.
         if app.debug:
-            logger = logging.getLogger('werkzeug')
+            logger = logging.getLogger("werkzeug")
             logger.setLevel(logging.INFO)
             logger.addHandler(logging.StreamHandler())
 
@@ -91,15 +93,15 @@ class InvenioLoggingSentry(InvenioLoggingBase):
         from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
         integrations = [FlaskIntegration()]
-        if app.config['LOGGING_SENTRY_CELERY']:
+        if app.config["LOGGING_SENTRY_CELERY"]:
             integrations.append(CeleryIntegration())
-        if app.config['LOGGING_SENTRY_SQLALCHEMY']:
+        if app.config["LOGGING_SENTRY_SQLALCHEMY"]:
             integrations.append(SqlalchemyIntegration())
-        if app.config['LOGGING_SENTRY_REDIS']:
+        if app.config["LOGGING_SENTRY_REDIS"]:
             integrations.append(RedisIntegration())
 
         sentry_sdk.init(
-            dsn=app.config['SENTRY_DSN'],
+            dsn=app.config["SENTRY_DSN"],
             in_app_exclude=logging_exclusions,
             integrations=integrations,
             before_send=self.add_request_id_sentry_python,
@@ -109,14 +111,14 @@ class InvenioLoggingSentry(InvenioLoggingBase):
 
     def install_raven_handler(self, app, logging_exclusions, level):
         """Install raven log handler."""
-        warnings.warn('The Raven library will be depricated.',
-                      PendingDeprecationWarning)
-        from raven.contrib.celery import register_logger_signal, \
-            register_signal
+        warnings.warn(
+            "The Raven library will be depricated.", PendingDeprecationWarning
+        )
+        from raven.contrib.celery import register_logger_signal, register_signal
         from raven.contrib.flask import Sentry
         from raven.handlers.logging import SentryHandler
 
-        cls = app.config['LOGGING_SENTRY_CLASS']
+        cls = app.config["LOGGING_SENTRY_CLASS"]
         if cls:
             if isinstance(cls, six.string_types):
                 cls = import_string(cls)
@@ -131,12 +133,11 @@ class InvenioLoggingSentry(InvenioLoggingBase):
         app.logger.addHandler(SentryHandler(client=sentry.client, level=level))
 
         # Capture warnings from warnings module
-        if app.config['LOGGING_SENTRY_PYWARNINGS']:
-            self.capture_pywarnings(
-                SentryHandler(sentry.client))
+        if app.config["LOGGING_SENTRY_PYWARNINGS"]:
+            self.capture_pywarnings(SentryHandler(sentry.client))
 
         # Setup Celery logging to Sentry
-        if app.config['LOGGING_SENTRY_CELERY']:
+        if app.config["LOGGING_SENTRY_CELERY"]:
             try:
                 register_logger_signal(sentry.client, loglevel=level)
             except TypeError:
@@ -146,10 +147,10 @@ class InvenioLoggingSentry(InvenioLoggingBase):
 
     def add_request_id_sentry_python(self, event, hint):
         """Add the request id as a tag."""
-        if g and hasattr(g, 'request_id'):
-            tags = event.get('tags') or []
-            tags.append(['request_id', g.request_id])
-            event['tags'] = tags
+        if g and hasattr(g, "request_id"):
+            tags = event.get("tags") or []
+            tags.append(["request_id", g.request_id])
+            event["tags"] = tags
         return event
 
 
@@ -159,8 +160,8 @@ class RequestIdProcessor(Processor):
     def process(self, data, **kwargs):
         """Process event data."""
         data = super(RequestIdProcessor, self).process(data, **kwargs)
-        if g and hasattr(g, 'request_id'):
-            tags = data.get('tags', {})
-            tags['request_id'] = g.request_id
-            data['tags'] = tags
+        if g and hasattr(g, "request_id"):
+            tags = data.get("tags", {})
+            tags["request_id"] = g.request_id
+            data["tags"] = tags
         return data

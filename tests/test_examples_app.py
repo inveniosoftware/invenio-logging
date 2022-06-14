@@ -24,19 +24,20 @@ def example_app():
 
     # Go to example directory
     project_dir = dirname(dirname(abspath(__file__)))
-    exampleappdir = join(project_dir, 'examples')
+    exampleappdir = join(project_dir, "examples")
     os.chdir(exampleappdir)
 
     # Setup application
-    assert subprocess.call('./app-setup.sh', shell=True) == 0
+    assert subprocess.call("./app-setup.sh", shell=True) == 0
 
     # Setup fixtures
-    assert subprocess.call('./app-fixtures.sh', shell=True) == 0
+    assert subprocess.call("./app-fixtures.sh", shell=True) == 0
 
     # Start example web app
-    cmd = 'FLASK_APP=app.py flask run --debugger -p 5001'
-    webapp = subprocess.Popen(cmd, stdout=subprocess.PIPE,
-                              preexec_fn=os.setsid, shell=True)
+    cmd = "FLASK_APP=app.py flask run --debugger -p 5001"
+    webapp = subprocess.Popen(
+        cmd, stdout=subprocess.PIPE, preexec_fn=os.setsid, shell=True
+    )
     time.sleep(5)
     # return webapp
     yield webapp
@@ -45,7 +46,7 @@ def example_app():
     os.killpg(webapp.pid, signal.SIGTERM)
 
     # Tear down example app
-    subprocess.call('./app-teardown.sh', shell=True)
+    subprocess.call("./app-teardown.sh", shell=True)
 
     # Return to the original directory
     os.chdir(current_dir)
@@ -54,6 +55,6 @@ def example_app():
 def test_example_app(example_app):
     """Test example app."""
     # Testing get index page
-    cmd = 'curl http://127.0.0.1:5001/'
+    cmd = "curl http://127.0.0.1:5001/"
     output = subprocess.check_output(cmd, shell=True).decode("utf-8")
-    assert 'Welcome to Invenio-Logging!' == output
+    assert "Welcome to Invenio-Logging!" == output

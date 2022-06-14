@@ -29,7 +29,7 @@ def tmppath():
 @pytest.yield_fixture()
 def pywarnlogger():
     """Rest the py.warnings logger."""
-    logger = logging.getLogger('py.warnings')
+    logger = logging.getLogger("py.warnings")
     yield logger
     logger.handlers = []
 
@@ -38,5 +38,6 @@ def pywarnlogger():
 def sentry_emit():
     """Mock Sentry emit."""
     from raven.handlers.logging import SentryHandler
-    with patch.object(SentryHandler, 'emit') as sentry_emit:
+
+    with patch.object(SentryHandler, "emit") as sentry_emit:
         yield sentry_emit

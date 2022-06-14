@@ -57,8 +57,8 @@ app = Flask(__name__)
 InvenioLoggingConsole(app)
 
 
-@app.route('/')
+@app.route("/")
 def index():
     """Log error."""
-    app.logger.error('Example error')
-    return 'Welcome to Invenio-Logging!'
+    app.logger.error("Example error")
+    return "Welcome to Invenio-Logging!"

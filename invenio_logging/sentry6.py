@@ -24,11 +24,11 @@ class Sentry6(Sentry):
             return {}
 
         user_info = {
-            'id': current_user.get_id(),
+            "id": current_user.get_id(),
         }
 
-        if 'SENTRY_USER_ATTRS' in current_app.config:
-            for attr in current_app.config['SENTRY_USER_ATTRS']:
+        if "SENTRY_USER_ATTRS" in current_app.config:
+            for attr in current_app.config["SENTRY_USER_ATTRS"]:
                 if hasattr(current_user, attr):
                     user_info[attr] = getattr(current_user, attr)
 

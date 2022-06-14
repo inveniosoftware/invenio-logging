@@ -33,7 +33,7 @@ class InvenioLoggingBase(object):
     @staticmethod
     def capture_pywarnings(handler):
         """Log python system warnings."""
-        logger = logging.getLogger('py.warnings')
+        logger = logging.getLogger("py.warnings")
         # Check for previously installed handlers.
         for h in logger.handlers:
             if isinstance(h, handler.__class__):
