@@ -87,7 +87,8 @@ For more information about logging please see:
 
 from __future__ import absolute_import, print_function
 
-from .version import __version__
+
+__version__ = '1.3.2'
 
 __all__ = (
     '__version__',
