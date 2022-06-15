@@ -219,7 +219,8 @@ def test_sentry6():
         )
     )
     InvenioLoggingSentry(app)
-    LoginManager(app)
+    login_manager = LoginManager(app)
+    login_manager.user_loader(lambda a: {})
 
     class User(UserMixin):
         def __init__(self, user_id, name):
