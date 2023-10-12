@@ -113,6 +113,9 @@ This allows you to customize the Sentry extension class. In particular if you
 are logging to Sentry v6, you can set this to
 :class:`invenio_logging.sentry6.Sentry6`."""
 
+LOGGING_SENTRY_INIT_KWARGS = None
+"""Pass extra options when initializing Sentry instance."""
+
 SENTRY_DSN = None
 """Set SENTRY_DSN environment variable."""
 

@@ -93,18 +93,22 @@ class InvenioLoggingSentry(InvenioLoggingBase):
         from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
         integrations = [FlaskIntegration()]
+        init_kwargs = {}
         if app.config["LOGGING_SENTRY_CELERY"]:
             integrations.append(CeleryIntegration())
         if app.config["LOGGING_SENTRY_SQLALCHEMY"]:
             integrations.append(SqlalchemyIntegration())
         if app.config["LOGGING_SENTRY_REDIS"]:
             integrations.append(RedisIntegration())
+        if app.config["LOGGING_SENTRY_INIT_KWARGS"]:
+            init_kwargs = app.config["LOGGING_SENTRY_INIT_KWARGS"]
 
         sentry_sdk.init(
             dsn=app.config["SENTRY_DSN"],
             in_app_exclude=logging_exclusions,
             integrations=integrations,
             before_send=self.add_request_id_sentry_python,
+            **init_kwargs
         )
         with configure_scope() as scope:
             scope.level = level
