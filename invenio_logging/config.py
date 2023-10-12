@@ -11,7 +11,7 @@
 
 Sentry can, in addition to the configuration variables listed, be further
 configured with the folllowing configuration variables (see
-`Raven <https://docs.sentry.io/clients/python/integrations/flask/#settings>`_
+`Sentry <https://docs.sentry.io/platforms/python/integrations/flask/#configure>`_
 for further details):
 
 - ``SENTRY_AUTO_LOG_STACKS``
@@ -20,21 +20,10 @@ for further details):
 - ``SENTRY_MAX_LENGTH_LIST``
 - ``SENTRY_MAX_LENGTH_STRING``
 - ``SENTRY_NAME``
-- ``SENTRY_PROCESSORS``
 - ``SENTRY_RELEASE``
 - ``SENTRY_SITE_NAME``
 - ``SENTRY_TAGS``
-- ``SENTRY_TRANSPORT``
 
-
-.. note::
-
-   Celery does not deal well with the threaded Sentry transport, so you should
-   make sure that your **Celery workers** are configured with:
-
-   .. code-block:: python
-
-      SENTRY_TRANSPORT = 'raven.transport.http.HTTPTransport'
 """
 
 # -------
@@ -85,9 +74,6 @@ Set to a valid Python logging level: ``CRITICAL``, ``ERROR``, ``WARNING``,
 # SENTRY
 # ------
 
-SENTRY_SDK = True
-"""Use of sentry-python SDK, if false raven will be used. """
-
 LOGGING_SENTRY_LEVEL = "WARNING"
 """Sentry logging level.
 
@@ -118,16 +104,3 @@ LOGGING_SENTRY_INIT_KWARGS = None
 
 SENTRY_DSN = None
 """Set SENTRY_DSN environment variable."""
-
-SENTRY_PROCESSORS = (
-    "raven.processors.SanitizePasswordsProcessor",
-    "invenio_logging.sentry.RequestIdProcessor",
-)
-"""Default Sentry event processors."""
-
-SENTRY_TRANSPORT = "raven.transport.http.HTTPTransport"
-"""Default Sentry transport.
-
-Explicitly set due to Celery incompatibility with threaded transport
-(see note above).
-"""
