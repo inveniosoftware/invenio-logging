@@ -315,7 +315,7 @@ texinfo_documents = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
-    "https://docs.python.org/": None,
+    "python": ("https://docs.python.org/", None),
     "flask": ("https://flask.palletsprojects.com/en/latest/", None),
     "celery": ("https://docs.celeryproject.org/en/stable/", None),
 }

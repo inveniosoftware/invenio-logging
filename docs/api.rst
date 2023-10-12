@@ -23,8 +23,5 @@ File System
 Sentry
 ------
 
-.. automodule:: invenio_logging.sentry6
-   :members:
-
 .. automodule:: invenio_logging.sentry
    :members:

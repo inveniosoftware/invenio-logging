@@ -8,13 +8,9 @@
 Changes
 =======
 
-Version 1.3.4 (released 2023-10-12)
+Version 2.0.0 (released 2023-10-12)
 
-- add back in setup sentry and sentry-sdk extras
-
-Version 1.3.3 (released 2023-10-12)
-
-- Adds `LOGGING_SENTRY_INIT_KWARGS` to allow extra config on sentry initialization
+- removes support for raven
 
 Version 1.3.2 (released 2022-02-28)
 
