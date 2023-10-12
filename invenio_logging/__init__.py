@@ -87,6 +87,6 @@ For more information about logging please see:
 
 from __future__ import absolute_import, print_function
 
-__version__ = "1.3.3"
+__version__ = "1.3.4"
 
 __all__ = ("__version__",)
