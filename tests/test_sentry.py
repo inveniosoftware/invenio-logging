@@ -10,7 +10,6 @@
 
 from __future__ import absolute_import, print_function
 
-
 from flask import Flask
 from sentry_sdk.hub import Hub
 from sentry_sdk.integrations.celery import CeleryIntegration
