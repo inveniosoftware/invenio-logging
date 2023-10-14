@@ -8,6 +8,10 @@
 Changes
 =======
 
+Version 2.0.1 (released 2023-10-14)
+
+- set sentry_event_id
+
 Version 2.0.0 (released 2023-10-12)
 
 - removes support for raven
