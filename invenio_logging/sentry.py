@@ -12,7 +12,13 @@ from __future__ import absolute_import, print_function
 
 import logging
 
+import sentry_sdk
 from flask import g
+from sentry_sdk import configure_scope
+from sentry_sdk.integrations.celery import CeleryIntegration
+from sentry_sdk.integrations.flask import FlaskIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
+from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
 from . import config
 from .ext import InvenioLoggingBase
@@ -66,13 +72,6 @@ class InvenioLoggingSentry(InvenioLoggingBase):
 
     def install_sentry_sdk_handler(self, app, logging_exclusions, level):
         """Install sentry-python sdk log handler."""
-        import sentry_sdk
-        from sentry_sdk import configure_scope
-        from sentry_sdk.integrations.celery import CeleryIntegration
-        from sentry_sdk.integrations.flask import FlaskIntegration
-        from sentry_sdk.integrations.redis import RedisIntegration
-        from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
-
         integrations = [FlaskIntegration()]
         init_kwargs = {}
         if app.config["LOGGING_SENTRY_CELERY"]:
@@ -100,4 +99,7 @@ class InvenioLoggingSentry(InvenioLoggingBase):
             tags = event.get("tags") or []
             tags.append(["request_id", g.request_id])
             event["tags"] = tags
+        event_id = sentry_sdk.last_event_id()
+        if event_id is not None:
+            g.sentry_event_id = event_id
         return event
