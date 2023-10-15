@@ -8,6 +8,10 @@
 Changes
 =======
 
+Version 2.1.0 (released 2023-10-15)
+
+- set sentry_event_id in templates
+
 Version 2.0.1 (released 2023-10-14)
 
 - set sentry_event_id
