@@ -39,6 +39,14 @@ class InvenioLoggingSentry(InvenioLoggingBase):
 
         app.extensions["invenio-logging-sentry"] = self
 
+        # Set sentry on template context
+        def sentry_app_context():
+            """Set sentry last event id."""
+            g.sentry_event_id = sentry_sdk.last_event_id()
+            return {"sentry_event_id": g.sentry_event_id}
+
+        app.context_processor(sentry_app_context)
+
     def init_config(self, app):
         """Initialize configuration."""
         for k in dir(config):
