@@ -9,6 +9,10 @@
 Changes
 =======
 
+Version 3.0.0 (released 2024-11-29)
+
+- setup: change sentry_sdk to sentry
+
 Version 2.1.2 (released 2024-11-28)
 
 - setup: pin dependencies
