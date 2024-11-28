@@ -9,6 +9,10 @@
 Changes
 =======
 
+Version 4.0.0 (released 2024-12-02)
+
+- setup: bump invenio dependencies
+
 Version 3.0.0 (released 2024-11-29)
 
 - setup: change sentry_sdk to sentry
