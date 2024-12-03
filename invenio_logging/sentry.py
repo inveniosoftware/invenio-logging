@@ -13,11 +13,6 @@ from __future__ import absolute_import, print_function
 import logging
 
 from flask import g
-from sentry_sdk import configure_scope
-from sentry_sdk.integrations.celery import CeleryIntegration
-from sentry_sdk.integrations.flask import FlaskIntegration
-from sentry_sdk.integrations.redis import RedisIntegration
-from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
 from . import config
 from .ext import InvenioLoggingBase
@@ -92,6 +87,13 @@ class InvenioLoggingSentry(InvenioLoggingBase):
 
     def install_sentry_sdk_handler(self, app, logging_exclusions, level):
         """Install sentry-python sdk log handler."""
+        # NOTE: It's ok to import these here, as the extension is only loaded once
+        from sentry_sdk import configure_scope
+        from sentry_sdk.integrations.celery import CeleryIntegration
+        from sentry_sdk.integrations.flask import FlaskIntegration
+        from sentry_sdk.integrations.redis import RedisIntegration
+        from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
+
         integrations = [FlaskIntegration()]
         init_kwargs = {}
         if app.config["LOGGING_SENTRY_CELERY"]:
