@@ -9,6 +9,10 @@
 Changes
 =======
 
+Version v3.0.2 (released 2024-12-03)
+
+- sentry: move imports inside extension class initializer
+
 Version v3.0.1 (released 2024-12-03)
 
 - sentry: import-detect sentry_sdk usage
