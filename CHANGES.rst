@@ -9,6 +9,10 @@
 Changes
 =======
 
+Version v3.0.1 (released 2024-12-03)
+
+- sentry: import-detect sentry_sdk usage
+
 Version 3.0.0 (released 2024-11-29)
 
 - setup: change sentry_sdk to sentry
