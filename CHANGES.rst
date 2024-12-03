@@ -9,6 +9,10 @@
 Changes
 =======
 
+Version v4.0.1 (released 2024-12-03)
+
+- sentry: import-detect sentry_sdk usage
+
 Version 4.0.0 (released 2024-12-02)
 
 - setup: bump invenio dependencies
