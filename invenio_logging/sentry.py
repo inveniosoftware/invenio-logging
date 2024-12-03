@@ -12,7 +12,6 @@ from __future__ import absolute_import, print_function
 
 import logging
 
-import sentry_sdk
 from flask import g
 from sentry_sdk import configure_scope
 from sentry_sdk.integrations.celery import CeleryIntegration
@@ -22,6 +21,11 @@ from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
 from . import config
 from .ext import InvenioLoggingBase
+
+try:
+    import sentry_sdk
+except ImportError:
+    sentry_sdk = None
 
 
 class InvenioLoggingSentry(InvenioLoggingBase):
@@ -33,6 +37,14 @@ class InvenioLoggingSentry(InvenioLoggingBase):
 
         # Only configure Sentry if SENTRY_DSN is set.
         if app.config["SENTRY_DSN"] is None:
+            return
+
+        # If SENTRY_DSN is set, check also that sentry-sdk is installed
+        if sentry_sdk is None:
+            app.logger.warning(
+                "The `SENTRY_DSN` config is set, but `sentry-sdk` is not installed. "
+                "Please install `sentry-sdk` to use the Sentry logging extension."
+            )
             return
 
         self.install_handler(app)
@@ -96,7 +108,7 @@ class InvenioLoggingSentry(InvenioLoggingBase):
             in_app_exclude=logging_exclusions,
             integrations=integrations,
             before_send=self.add_request_id_sentry_python,
-            **init_kwargs
+            **init_kwargs,
         )
         with configure_scope() as scope:
             scope.level = level
