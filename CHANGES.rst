@@ -9,6 +9,10 @@
 Changes
 =======
 
+Version v2.1.3 (released 2024-12-03)
+
+- sentry: import-detect sentry_sdk usage
+
 Version 2.1.2 (released 2024-11-28)
 
 - setup: pin dependencies
