@@ -1,0 +1,46 @@
+{
+  "index_patterns": ["__SEARCH_INDEX_PREFIX__logs-*"],
+  "data_stream": {},
+  "template": {
+    "mappings": {
+      "properties": {
+        "timestamp": {
+          "type": "date"
+        },
+        "event": {
+          "properties": {
+            "action": { "type": "keyword" },
+            "description": { "type": "text" }
+          }
+        },
+        "message": {
+          "type": "text"
+        },
+        "user": {
+          "properties": {
+            "id": { "type": "keyword" },
+            "email": { "type": "keyword" },
+            "roles": { "type": "keyword" }
+          }
+        },
+        "resource": {
+          "properties": {
+            "type": { "type": "keyword" },
+            "id": { "type": "keyword" },
+            "metadata": { "type": "object" },
+            "parent": {
+              "properties": {
+                "type": { "type": "keyword" },
+                "id": { "type": "keyword" },
+                "metadata": { "type": "object" }
+              }
+            }
+          }
+        },
+        "extra": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

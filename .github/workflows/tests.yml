@@ -29,4 +29,3 @@ jobs:
     uses: inveniosoftware/workflows/.github/workflows/tests-python.yml@master
     with:
       db-service: '[""]'
-      search-service: '[""]'
