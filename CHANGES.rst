@@ -9,6 +9,10 @@
 Changes
 =======
 
+Version v2.1.5 (released 2025-02-21)
+
+- installation: rename the sentry extra (`_` `-`in the estra name not working)
+
 Version v2.1.4 (released 2024-12-03)
 
 - sentry: move imports inside extension class initializer
