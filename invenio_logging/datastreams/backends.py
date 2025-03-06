@@ -43,6 +43,7 @@ class SearchBackend(LogBackend):
             "user.id",
             "user.email",
             "resource.id",
+            "resource.parent.id",
         ]
 
         self._ensure_template_exists()
@@ -68,12 +69,12 @@ class SearchBackend(LogBackend):
             current_app.logger.error(f"Failed to send log Search engine: {e}")
             raise e
 
-    def search(self, term=None, size=10):
+    def search(self, query=None, size=10):
         """
         Search log events.
 
         :param size: Number of results to return.
-        :return: List of log events that match the search term.
+        :return: List of log events that match the search query.
         """
         try:
             index_prefix = current_app.config.get("SEARCH_INDEX_PREFIX", "")
@@ -83,7 +84,7 @@ class SearchBackend(LogBackend):
                 "size": size,
                 "query": {
                     "multi_match": {
-                        "query": term,
+                        "query": query,
                         "fields": self.search_fields,
                         "operator": "and",
                     }

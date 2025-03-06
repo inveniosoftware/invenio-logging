@@ -29,3 +29,9 @@ class AuditLogBuilder(LogBuilder):
     def send(cls, log_event):
         """Send log event using the backend."""
         cls.backend_cls().send(log_event)
+
+    @classmethod
+    def search(cls, query):
+        """Search logs."""
+        results = cls.backend_cls().search(query)
+        return cls.schema.load(results, many=True)

@@ -39,7 +39,7 @@ def test_send_and_search(app, valid_log_event):
     validated_event = LogBuilder.validate(valid_log_event)
     backend.send(validated_event)
     current_search_client.indices.refresh(index=backend.index_name)
-    response = backend.search(term="test")
+    response = backend.search(query="test")
     assert len(response) == 1
     assert response[0]["message"] == valid_log_event["message"]
 

@@ -8,6 +8,8 @@
 
 """Invenio OpenSearch Datastream Schema."""
 
+from datetime import datetime
+
 from marshmallow import EXCLUDE, Schema, fields
 
 
@@ -62,7 +64,7 @@ class LogEventSchema(Schema):
     timestamp = fields.DateTime(
         required=True,
         description="Timestamp when the event occurred.",
-        attribute="@timestamp",
+        data_key="@timestamp",
     )
     event = fields.Nested(EventSchema, required=True)
     message = fields.Str(
@@ -81,3 +83,21 @@ class LogEventSchema(Schema):
     extra = fields.Dict(
         required=False, description="Additional structured metadata for logging."
     )
+
+    def _convert_timestamp(self, obj):
+        """Convert `timestamp` from ISO string to datetime if needed."""
+        if isinstance(obj, dict) and isinstance(obj.get("timestamp"), str):
+            obj["timestamp"] = datetime.fromisoformat(obj["timestamp"])
+        return obj
+
+    def dump(self, obj, **kwargs):
+        """Ensure `timestamp` is always a `datetime` before dumping.
+
+        Since we are calling this from a celery task, we need to ensure that the `timestamp` field is a `datetime` object
+        """
+        if isinstance(obj, list):
+            obj = [self._convert_timestamp(item) for item in obj]
+        else:
+            obj = self._convert_timestamp(obj)
+
+        return super().dump(obj, **kwargs)

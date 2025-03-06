@@ -43,6 +43,16 @@ class LogManager:
             log = log_builder.build(log_data)
             log_builder.send(log)
 
+    def search(self, log_type, query):
+        """Search logs."""
+        if log_type not in self.builders:
+            raise ValueError(
+                f"No log builder found for type '{log_type}'. Available types: {self.builders.keys()}"
+            )
+
+        log_builder = self.builders[log_type]
+        return log_builder.search(query)
+
     def register_builder(self, log_type, builder_class):
         """Register a log builder."""
         self.builders[log_type] = builder_class
