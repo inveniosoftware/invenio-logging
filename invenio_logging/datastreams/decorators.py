@@ -29,6 +29,7 @@ def log_task():
                 message=None, event=None, user=None, resource=None, extra=None
             ):
                 """Log event."""
+                log_data["log_type"] = log_type
                 log_data["message"] = message if message else log_data.get("message")
                 log_data["event"] = event if event else log_data.get("event")
                 log_data["user"] = user if user else log_data.get("user")
@@ -37,7 +38,7 @@ def log_task():
                 )
                 log_data["extra"] = extra if extra else log_data.get("extra")
                 log_event = LogEvent(**log_data)
-                current_datastream_logging_manager.log(log_type, log_event)
+                current_datastream_logging_manager.log(log_event)
 
             kwargs["_log_event"] = _log_event
             return func(*args, **kwargs)

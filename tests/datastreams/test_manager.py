@@ -42,15 +42,16 @@ def test_log_event():
     log_manager.register_builder("info", mock_builder)
 
     log_event = LogEvent(
+        log_type="info",
         message="Test event",
         event="test",
     )
-    log_manager.log("info", log_event, async_mode=False)
+    log_manager.log(log_event, async_mode=False)
     assert mock_builder.logs == ["Log: Test event"]
 
 
 def test_log_event_no_builder():
     log_manager = LogManager()
     with pytest.raises(ValueError):
-        log_event = LogEvent(message="Test event", event="test")
-        log_manager.log("error", log_event, async_mode=False)
+        log_event = LogEvent(log_type="error", message="Test event", event="test")
+        log_manager.log(log_event, async_mode=False)

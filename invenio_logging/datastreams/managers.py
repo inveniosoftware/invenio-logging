@@ -19,17 +19,16 @@ class LogManager:
         """Initialize the log manager with builders."""
         self.builders = {}
 
-    def log(self, log_type, log_event, async_mode=True):
+    def log(self, log_event, async_mode=True):
         """
         Log an event using the correct builder.
 
-        :param log_type: Type of log (e.g., "audit", "job").
         :param log_event: Instance of LogEvent.
         :param async_mode: If True, sends logs via Celery.
         """
-        if log_type not in self.builders:
+        if log_event.type not in self.builders:
             raise ValueError(
-                f"No log builder found for type '{log_type}'. Available types: {self.builders.keys()}"
+                f"No log builder found for type '{log_event.type}'. Available types: {self.builders.keys()}"
             )
         if not isinstance(log_event, LogEvent):
             raise ValueError("log_event must be an instance of LogEvent")
@@ -37,9 +36,9 @@ class LogManager:
         log_data = log_event.to_dict()
 
         if async_mode:
-            log_event_task.delay(log_type, log_data)
+            log_event_task.delay(log_event.type, log_data)
         else:
-            log_builder = self.builders[log_type]
+            log_builder = self.builders[log_event.type]
             log = log_builder.build(log_data)
             log_builder.send(log)
 

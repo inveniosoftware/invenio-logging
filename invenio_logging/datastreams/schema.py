@@ -10,7 +10,7 @@
 
 from datetime import datetime
 
-from marshmallow import EXCLUDE, Schema, fields
+from marshmallow import EXCLUDE, Schema, fields, post_dump, pre_load
 
 
 class UserSchema(Schema):
@@ -64,7 +64,7 @@ class LogEventSchema(Schema):
     timestamp = fields.DateTime(
         required=True,
         description="Timestamp when the event occurred.",
-        data_key="@timestamp",
+        attribute="@timestamp",
     )
     event = fields.Nested(EventSchema, required=True)
     message = fields.Str(

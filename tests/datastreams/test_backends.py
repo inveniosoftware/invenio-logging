@@ -22,6 +22,7 @@ def test_ensure_template_exists_missing(app):
 def test_init(app):
     log_type = "test"
     # Manually create the registered index templates (we need to consume the generator)
+    list(current_search.put_component_templates())
     list(current_search.put_index_templates())
 
     backend = SearchBackend(log_type)

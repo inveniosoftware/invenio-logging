@@ -25,6 +25,7 @@ from invenio_logging.datastreams.log_event import LogEvent
 def valid_log_event():
     """Return a valid log event."""
     log_event = LogEvent(
+        log_type="test",
         message="Test log message",
         event=dict(action="test"),
         resource=dict(id="1", type="test"),
@@ -38,6 +39,7 @@ def valid_log_event():
 def invalid_log_event():
     """Return an invalid log event."""
     log_event = LogEvent(
+        log_type="test",
         message="Test log message",
         event="test",
     )

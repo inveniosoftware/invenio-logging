@@ -15,11 +15,19 @@ class LogEvent:
     """Class to represent a structured log event."""
 
     def __init__(
-        self, event={}, resource={}, user={}, extra={}, timestamp=None, message=None
+        self,
+        log_type="application",
+        event={},
+        resource={},
+        user={},
+        extra={},
+        timestamp=None,
+        message=None,
     ):
         """
         Create a LogEvent instance.
 
+        :param log_type: Type of log event.
         :param event: Dict with `action` (required) and optional `description`.
         :param resource: Dict with `type`, `id`, and optional `metadata`.
         :param user: Dict with `id`, `email`, and optional `roles` (default: empty).
@@ -27,6 +35,7 @@ class LogEvent:
         :param timestamp: Optional timestamp (defaults to now).
         :param message: Optional human-readable message.
         """
+        self.type = log_type
         self.timestamp = timestamp or datetime.now().isoformat()
         self.event = event
         self.resource = resource

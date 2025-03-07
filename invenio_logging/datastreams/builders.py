@@ -31,7 +31,7 @@ class LogBuilder(ABC):
     def validate(cls, log_event):
         """Validate the log event against the schema."""
         try:
-            return cls.schema.dump(log_event)
+            return cls.schema.load(log_event)
         except ValidationError as err:
             raise ValueError(f"Invalid log data: {err.messages}")
 
