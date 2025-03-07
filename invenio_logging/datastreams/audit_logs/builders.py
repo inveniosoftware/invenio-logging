@@ -35,3 +35,9 @@ class AuditLogBuilder(LogBuilder):
         """Search logs."""
         results = cls.backend_cls().search(query)
         return cls.schema.dump(results, many=True)
+
+    @classmethod
+    def list(cls):
+        """List audit logs."""
+        results = cls.backend_cls().list()
+        return cls.schema.dump(results, many=True)

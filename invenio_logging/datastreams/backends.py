@@ -89,10 +89,31 @@ class SearchBackend(LogBackend):
                         "operator": "and",
                     }
                 },
-                "sort": [{"timestamp": {"order": "desc"}}],
+                "sort": [{"@timestamp": {"order": "desc"}}],
             }
             # TODO: add pagination?
             response = self.client.search(index=full_index_name, body=search_query)
+            return [hit["_source"] for hit in response.get("hits", {}).get("hits", [])]
+
+        except Exception as e:
+            current_app.logger.error(f"Failed to search logs: {e}")
+            raise e
+
+    def list(self, size=10):
+        """
+        List log events.
+
+        :param size: Number of results to return.
+        :return: List of log events.
+        """
+        try:
+            index_prefix = current_app.config.get("SEARCH_INDEX_PREFIX", "")
+            full_index_name = f"{index_prefix}{self.index_name}"
+
+            response = self.client.search(
+                index=full_index_name,
+                body={"size": size, "sort": [{"@timestamp": {"order": "desc"}}]},
+            )
             return [hit["_source"] for hit in response.get("hits", {}).get("hits", [])]
 
         except Exception as e:
