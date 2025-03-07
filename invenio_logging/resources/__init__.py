@@ -8,8 +8,8 @@
 
 """Resources module."""
 
-from .resource import LogsResource
 from .config import LogsResourceConfig
+from .resource import LogsResource
 
 __all__ = (
     "LogsResource",

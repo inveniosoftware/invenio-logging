@@ -1,10 +1,23 @@
-from marshmallow import fields
+# -*- coding: utf-8 -*-
+#
+# This file is part of Invenio.
+# Copyright (C) 2025 CERN.
+#
+# Invenio is free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details.
 
-from invenio_records_resources.resources import SearchRequestArgsSchema, RecordResourceConfig
-from invenio_records_resources.services.base.config import ConfiguratorMixin
+"""Resources config."""
 
 from flask_resources import HTTPJSONException, create_error_handler
+from invenio_records_resources.resources import (
+    RecordResourceConfig,
+    SearchRequestArgsSchema,
+)
+from invenio_records_resources.services.base.config import ConfiguratorMixin
+from marshmallow import fields
+
 from ..errors import InvalidLogQueryError
+
 
 #
 # Request args
@@ -17,11 +30,13 @@ class LogSearchRequestArgsSchema(SearchRequestArgsSchema):
     user_id = fields.String()
     action = fields.String()
 
+
 error_handlers = {
     InvalidLogQueryError: create_error_handler(
         lambda e: HTTPJSONException(code=400, description=str(e))
     ),
 }
+
 
 #
 # Resource config
