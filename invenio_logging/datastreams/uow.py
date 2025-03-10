@@ -17,9 +17,8 @@ from invenio_logging.proxies import current_datastream_logging_manager
 class LoggingOp(Operation):
     """A logging operation."""
 
-    def __init__(self, log_type, log_event):
+    def __init__(self, log_event):
         """Initialize operation."""
-        self._log_type = log_type
         self._log_event = log_event
 
         if not isinstance(log_event, LogEvent):
@@ -27,4 +26,4 @@ class LoggingOp(Operation):
 
     def on_post_commit(self, uow):
         """Log the event."""
-        current_datastream_logging_manager.log(self._log_type, self._log_event)
+        current_datastream_logging_manager.log(self._log_event)
