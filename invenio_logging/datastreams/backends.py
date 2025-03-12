@@ -82,13 +82,15 @@ class SearchBackend(LogBackend):
 
             search_query = {
                 "size": size,
-                "query": {
-                    "multi_match": {
-                        "query": query,
-                        "fields": self.search_fields,
-                        "operator": "and",
+                "query": (
+                    {"match_all": {}} if not query else {
+                        "multi_match": {
+                            "query": query,
+                            "fields": self.search_fields,
+                            "operator": "and"
+                        }
                     }
-                },
+                ),
                 "sort": [{"@timestamp": {"order": "desc"}}],
             }
             # TODO: add pagination?

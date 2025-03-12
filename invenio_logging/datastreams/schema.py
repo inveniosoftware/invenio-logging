@@ -64,7 +64,6 @@ class LogEventSchema(Schema):
     timestamp = fields.DateTime(
         required=True,
         description="Timestamp when the event occurred.",
-        attribute="@timestamp",
     )
     event = fields.Nested(EventSchema, required=True)
     message = fields.Str(
@@ -84,20 +83,15 @@ class LogEventSchema(Schema):
         required=False, description="Additional structured metadata for logging."
     )
 
-    def _convert_timestamp(self, obj):
-        """Convert `timestamp` from ISO string to datetime if needed."""
-        if isinstance(obj, dict) and isinstance(obj.get("timestamp"), str):
-            obj["timestamp"] = datetime.fromisoformat(obj["timestamp"])
-        return obj
+    def load(self, data, **kwargs):
+        """Transform `timestamp` to `@timestamp` on load."""
+        loaded_data = super().load(data, **kwargs)
+        if "timestamp" in loaded_data:
+            loaded_data["@timestamp"] = loaded_data.pop("timestamp")
+        return loaded_data
 
     def dump(self, obj, **kwargs):
-        """Ensure `timestamp` is always a `datetime` before dumping.
-
-        Since we are calling this from a celery task, we need to ensure that the `timestamp` field is a `datetime` object
-        """
-        if isinstance(obj, list):
-            obj = [self._convert_timestamp(item) for item in obj]
-        else:
-            obj = self._convert_timestamp(obj)
-
+        """Ensure `@timestamp` is converted to `datetime` before dumping."""
+        if "@timestamp" in obj and isinstance(obj["@timestamp"], str):
+            obj["timestamp"] = datetime.fromisoformat(obj["@timestamp"])
         return super().dump(obj, **kwargs)

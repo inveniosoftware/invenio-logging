@@ -33,8 +33,7 @@ class AuditLogBuilder(LogBuilder):
     @classmethod
     def search(cls, query):
         """Search logs."""
-        results = cls.backend_cls().search(query)
-        return cls.schema.dump(results, many=True)
+        return cls.backend_cls().search(query)
 
     @classmethod
     def list(cls):
