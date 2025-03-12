@@ -10,7 +10,7 @@
 
 from invenio_db.uow import Operation
 
-from invenio_logging.datastreams.log_event import LogEvent
+from .log_event import BaseLogEvent
 from invenio_logging.proxies import current_datastream_logging_manager
 
 
@@ -21,8 +21,8 @@ class LoggingOp(Operation):
         """Initialize operation."""
         self._log_event = log_event
 
-        if not isinstance(log_event, LogEvent):
-            raise ValueError("log_event must be an instance of LogEvent")
+        if not isinstance(log_event, BaseLogEvent):
+            raise ValueError("log_event must be an instance of BaseLogEvent")
 
     def on_post_commit(self, uow):
         """Log the event."""

@@ -6,12 +6,4 @@
 # Invenio is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-"""Invenio module for audit-logs management."""
-
-from .backends import SearchAuditLogBackend
-from .builders import AuditLogBuilder
-
-__all__ = (
-    "SearchAuditLogBackend",
-    "AuditLogBuilder",
-)
+"""Invenio sub-module for logging management."""

@@ -10,7 +10,6 @@
 
 from celery import shared_task
 
-from invenio_logging.datastreams.log_event import LogEvent
 from invenio_logging.proxies import current_datastream_logging_manager
 
 

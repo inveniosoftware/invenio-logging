@@ -12,9 +12,8 @@ from __future__ import absolute_import, print_function
 
 from importlib_metadata import entry_points
 
-from .datastreams.managers import LogManager
+from .engine.managers import LogManager
 from .ext import InvenioLoggingBase
-from .resources import LogsResource, LogsResourceConfig
 
 
 class InvenioLoggingDatastreams(InvenioLoggingBase):
@@ -26,24 +25,18 @@ class InvenioLoggingDatastreams(InvenioLoggingBase):
         :param app: An instance of :class:`~flask.Flask`.
         """
         self.init_manager()
-        self.init_resources(app)
         self.load_builders()
         app.extensions["invenio-logging-datastreams"] = self
 
     def init_manager(self):
-        """Initialize the logging manager."""
-        manager = LogManager()
-        self.manager = manager
+            """
+            Initialize the logging manager.
+            """
+            self.manager = LogManager()
 
     def load_builders(self):
         """Load log builders from entry points."""
-        for ep in entry_points(group="invenio_logging.datastreams.builders"):
+        for ep in entry_points(group="invenio_logging.engine.builders"):
             builder_class = ep.load()
             self.manager.register_builder(ep.name, builder_class)
 
-    def init_resources(self, app):
-        """Init resources."""
-        self.resource = LogsResource(
-            config=LogsResourceConfig.build(app),
-            manager=self.manager,
-        )

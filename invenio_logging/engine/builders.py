@@ -12,8 +12,6 @@ from abc import ABC, abstractmethod
 
 from marshmallow import ValidationError
 
-from .schema import LogEventSchema
-
 
 class LogBuilder(ABC):
     """Base log builder for structured logging."""
@@ -24,8 +22,11 @@ class LogBuilder(ABC):
     type = "generic"
     """Type of log event."""
 
-    schema = LogEventSchema()
-    """Schema for validating log events."""
+    @property
+    @abstractmethod
+    def schema(cls):
+        """Schema for validating log events."""
+        raise NotImplementedError()
 
     @classmethod
     def validate(cls, log_event):
@@ -53,6 +54,7 @@ class LogBuilder(ABC):
         """Send log event to the log backend."""
         raise NotImplementedError()
 
+    @classmethod
     def search(self, query):
         """Search logs."""
         raise NotImplementedError()

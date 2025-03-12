@@ -18,7 +18,7 @@ import pytest
 from flask import Flask
 from invenio_search import InvenioSearch
 
-from invenio_logging.datastreams.log_event import LogEvent
+from invenio_logging.engine.log_event import LogEvent
 
 
 @pytest.fixture(scope="module")

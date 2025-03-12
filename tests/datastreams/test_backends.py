@@ -11,7 +11,7 @@ import pytest
 from invenio_search import current_search, current_search_client
 
 from invenio_logging.datastreams.backends import SearchBackend
-from invenio_logging.datastreams.builders import LogBuilder
+from invenio_logging.engine.builders import LogBuilder
 
 
 def test_ensure_template_exists_missing(app):

@@ -12,7 +12,7 @@ from datetime import datetime
 
 import pytest
 
-from invenio_logging.datastreams.builders import LogBuilder
+from invenio_logging.engine.builders import LogBuilder
 
 
 class TestLogBuilder(LogBuilder):

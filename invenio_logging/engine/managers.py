@@ -8,7 +8,7 @@
 
 """Invenio module for datastream logging management."""
 
-from .log_event import LogEvent
+from .log_event import BaseLogEvent
 from .tasks import log_event_task
 
 
@@ -30,8 +30,8 @@ class LogManager:
             raise ValueError(
                 f"No log builder found for type '{log_event.type}'. Available types: {self.builders.keys()}"
             )
-        if not isinstance(log_event, LogEvent):
-            raise ValueError("log_event must be an instance of LogEvent")
+        if not isinstance(log_event, BaseLogEvent):
+            raise ValueError("log_event must be an instance of BaseLogEvent")
 
         log_data = log_event.to_dict()
 

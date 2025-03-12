@@ -6,23 +6,12 @@
 # Invenio is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-"""Invenio module for datastream backends."""
-
-
-from abc import ABC, abstractmethod
+"""Datastream search backend."""
 
 from flask import current_app
 from invenio_search import current_search_client
 
-
-class LogBackend(ABC):
-    """Abstract base class for log backends."""
-
-    @abstractmethod
-    def send(self, log_type, log_event):
-        """Send a log event to the backend."""
-        raise NotImplementedError()
-
+from invenio_logging.engine.backends import LogBackend
 
 class SearchBackend(LogBackend):
     """Generic backend for storing logs in datastreams index."""

@@ -8,48 +8,34 @@
 
 """Datastream log event."""
 
+from abc import ABC, abstractmethod
 from datetime import datetime
 
 
-class LogEvent:
+class BaseLogEvent(ABC):
     """Class to represent a structured log event."""
 
     def __init__(
         self,
         log_type="application",
-        event={},
-        resource={},
-        user={},
-        extra={},
         timestamp=None,
+        event={},
         message=None,
     ):
         """
         Create a LogEvent instance.
 
         :param log_type: Type of log event.
-        :param event: Dict with `action` (required) and optional `description`.
-        :param resource: Dict with `type`, `id`, and optional `metadata`.
-        :param user: Dict with `id`, `email`, and optional `roles` (default: empty).
-        :param extra: Additional metadata dictionary (default: empty).
         :param timestamp: Optional timestamp (defaults to now).
+        :param event: Dict with `action` (required) and optional `description`.
         :param message: Optional human-readable message.
         """
         self.type = log_type
         self.timestamp = timestamp or datetime.now().isoformat()
         self.event = event
-        self.resource = resource
-        self.user = user
-        self.extra = extra
         self.message = message
 
+    @abstractmethod
     def to_dict(self):
         """Convert the log event to a dictionary matching the schema."""
-        return {
-            "timestamp": self.timestamp,
-            "event": self.event,
-            "message": self.message,
-            "user": self.user,
-            "resource": self.resource,
-            "extra": self.extra,
-        }
+        raise NotImplementedError()
