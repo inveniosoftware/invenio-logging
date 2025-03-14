@@ -9,7 +9,6 @@
 
 import pytest
 
-from invenio_logging.engine.log_event import BaseLogEvent
 from invenio_logging.engine.managers import LogManager
 
 
@@ -36,12 +35,12 @@ def test_register_builder():
     assert log_manager.builders["info"] == MockLogBuilder
 
 
-def test_log_event():
+def test_log_event(log_event_class):
     log_manager = LogManager()
     mock_builder = MockLogBuilder()
     log_manager.register_builder("info", mock_builder)
 
-    log_event = BaseLogEvent(
+    log_event = log_event_class(
         log_type="info",
         message="Test event",
         event="test",
@@ -50,8 +49,10 @@ def test_log_event():
     assert mock_builder.logs == ["Log: Test event"]
 
 
-def test_log_event_no_builder():
+def test_log_event_no_builder(log_event_class):
     log_manager = LogManager()
     with pytest.raises(ValueError):
-        log_event = BaseLogEvent(log_type="error", message="Test event", event="test")
+        log_event = log_event_class(
+            log_type="error", message="Test event", event="test"
+        )
         log_manager.log(log_event, async_mode=False)

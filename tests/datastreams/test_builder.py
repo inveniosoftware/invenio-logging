@@ -12,6 +12,7 @@ from datetime import datetime
 
 import pytest
 
+from invenio_logging.datastreams.schema import LogEventSchema
 from invenio_logging.engine.builders import LogBuilder
 
 
@@ -28,6 +29,10 @@ class TestLogBuilder(LogBuilder):
         """Send log event to the log backend."""
         return True
 
+    @classmethod
+    def validate(cls, log_event):
+        return LogEventSchema().load(log_event)
+
 
 def test_validate_valid_log_event(valid_log_event):
     """Test validation of a valid log event."""
@@ -41,7 +46,7 @@ def test_validate_valid_log_event(valid_log_event):
 
 def test_validate_invalid_log_event(invalid_log_event):
     """Test validation of an invalid log event."""
-    with pytest.raises(ValueError):
+    with pytest.raises(Exception):
         TestLogBuilder.validate(invalid_log_event)
 
 

@@ -16,8 +16,8 @@ from .engine.managers import LogManager
 from .ext import InvenioLoggingBase
 
 
-class InvenioLoggingDatastreams(InvenioLoggingBase):
-    """Invenio-Logging extension for OpenSearch Datastreams."""
+class InvenioLoggingEngine(InvenioLoggingBase):
+    """Invenio-Logging extension."""
 
     def init_app(self, app):
         """Initialize app.
@@ -26,17 +26,14 @@ class InvenioLoggingDatastreams(InvenioLoggingBase):
         """
         self.init_manager()
         self.load_builders()
-        app.extensions["invenio-logging-datastreams"] = self
+        app.extensions["invenio-logging-engine"] = self
 
     def init_manager(self):
-            """
-            Initialize the logging manager.
-            """
-            self.manager = LogManager()
+        """Initialize the logging manager."""
+        self.manager = LogManager()
 
     def load_builders(self):
         """Load log builders from entry points."""
         for ep in entry_points(group="invenio_logging.engine.builders"):
             builder_class = ep.load()
             self.manager.register_builder(ep.name, builder_class)
-

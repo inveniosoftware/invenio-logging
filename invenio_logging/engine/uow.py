@@ -10,8 +10,9 @@
 
 from invenio_db.uow import Operation
 
+from invenio_logging.proxies import current_logging_manager
+
 from .log_event import BaseLogEvent
-from invenio_logging.proxies import current_datastream_logging_manager
 
 
 class LoggingOp(Operation):

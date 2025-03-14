@@ -13,6 +13,7 @@ from invenio_search import current_search_client
 
 from invenio_logging.engine.backends import LogBackend
 
+
 class SearchBackend(LogBackend):
     """Generic backend for storing logs in datastreams index."""
 

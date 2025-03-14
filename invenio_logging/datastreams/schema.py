@@ -9,16 +9,8 @@
 """Invenio OpenSearch Datastream Schema."""
 
 from datetime import datetime
-from enum import Enum
+
 from marshmallow import EXCLUDE, Schema, fields, post_dump, pre_load
-from marshmallow.validate import OneOf
-
-
-class LogType(Enum):
-    INFO = "INFO"
-    ERROR = "ERROR"
-    WARNING = "WARNING"
-    DEBUG = "DEBUG"
 
 
 class UserSchema(Schema):
@@ -61,7 +53,7 @@ class ResourceSchema(Schema):
     )
 
 
-class LogEventSchema(Schema):
+class BaseDatastreamSchema(Schema):
     """Main schema for audit log events in InvenioRDM."""
 
     class Meta:
@@ -72,28 +64,6 @@ class LogEventSchema(Schema):
     timestamp = fields.DateTime(
         required=True,
         description="Timestamp when the event occurred.",
-    )
-    event = fields.Nested(EventSchema, required=True)
-    message = fields.Str(
-        required=True, description="Human-readable description of the event."
-    )
-    user = fields.Nested(
-        UserSchema,
-        required=False,
-        description="Information about the user who triggered the event.",
-    )
-    resource = fields.Nested(
-        ResourceSchema,
-        required=True,
-        description="Information about the affected resource.",
-    )
-    type = fields.Str(
-        required=True,
-        description="The type of event (e.g., INFO, ERROR, WARNING, DEBUG).",
-        validate=OneOf([e.value for e in LogType])
-    )
-    extra = fields.Dict(
-        required=False, description="Additional structured metadata for logging."
     )
 
     def load(self, data, **kwargs):
@@ -108,3 +78,25 @@ class LogEventSchema(Schema):
         if "@timestamp" in obj and isinstance(obj["@timestamp"], str):
             obj["timestamp"] = datetime.fromisoformat(obj["@timestamp"])
         return super().dump(obj, **kwargs)
+
+
+class LogEventSchema(BaseDatastreamSchema):
+    """Main schema for audit log events in InvenioRDM."""
+
+    event = fields.Nested(EventSchema, required=True)
+    message = fields.Str(
+        required=True, description="Human-readable description of the event."
+    )
+    user = fields.Nested(
+        UserSchema,
+        required=False,
+        description="Information about the user who triggered the event.",
+    )
+    resource = fields.Nested(
+        ResourceSchema,
+        required=True,
+        description="Information about the affected resource.",
+    )
+    extra = fields.Dict(
+        required=False, description="Additional structured metadata for logging."
+    )

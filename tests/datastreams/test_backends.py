@@ -11,12 +11,12 @@ import pytest
 from invenio_search import current_search, current_search_client
 
 from invenio_logging.datastreams.backends import SearchBackend
-from invenio_logging.engine.builders import LogBuilder
+from invenio_logging.datastreams.schema import LogEventSchema
 
 
 def test_ensure_template_exists_missing(app):
     with pytest.raises(RuntimeError):
-        backend = SearchBackend("test")
+        SearchBackend("test")
 
 
 def test_init(app):
@@ -37,8 +37,8 @@ def test_init(app):
 
 def test_send_and_search(app, valid_log_event):
     backend = SearchBackend("test")
-    validated_event = LogBuilder.validate(valid_log_event)
-    backend.send(validated_event)
+    validated_schema = LogEventSchema().load(valid_log_event)
+    backend.send(validated_schema)
     current_search_client.indices.refresh(index=backend.index_name)
     response = backend.search(query="test")
     assert len(response) == 1

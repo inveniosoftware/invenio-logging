@@ -10,6 +10,7 @@
 
 from abc import ABC, abstractmethod
 
+
 class LogBackend(ABC):
     """Abstract base class for log backends."""
 
@@ -17,7 +18,6 @@ class LogBackend(ABC):
     def send(self, log_type, log_event):
         """Send a log event to the backend."""
         raise NotImplementedError()
-
 
     @abstractmethod
     def search(self):

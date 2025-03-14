@@ -43,9 +43,7 @@ class LogManager:
             log_builder.send(log)
 
     def search(self, log_type, query):
-        """
-        Search for logs using the correct builder.
-        """
+        """Search for logs using the correct builder."""
         if log_type not in self.builders:
             raise ValueError(
                 f"No log builder found for type '{log_type}'. Available types: {self.builders.keys()}"
@@ -55,9 +53,7 @@ class LogManager:
         return log_builder.search(query)
 
     def list(self, log_type):
-        """
-        List logs using the correct builder.
-        """
+        """List logs using the correct builder."""
         if log_type not in self.builders:
             raise ValueError(
                 f"No log builder found for type '{log_type}'. Available types: {self.builders.keys()}"

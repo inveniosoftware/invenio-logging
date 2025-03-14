@@ -10,15 +10,15 @@
 
 from celery import shared_task
 
-from invenio_logging.proxies import current_datastream_logging_manager
+from invenio_logging.proxies import current_logging_manager
 
 
 @shared_task(ignore_result=True)
 def log_event_task(log_type, log_data):
     """Celery task to log an event asynchronously."""
-    if log_type not in current_datastream_logging_manager.builders:
+    if log_type not in current_logging_manager.builders:
         raise ValueError(f"No log builder found for type '{log_type}'.")
 
-    log_builder = current_datastream_logging_manager.builders[log_type]
+    log_builder = current_logging_manager.builders[log_type]
     log = log_builder.build(log_data)
     log_builder.send(log)

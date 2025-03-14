@@ -22,19 +22,10 @@ class LogBuilder(ABC):
     type = "generic"
     """Type of log event."""
 
-    @property
-    @abstractmethod
-    def schema(cls):
-        """Schema for validating log events."""
-        raise NotImplementedError()
-
     @classmethod
-    def validate(cls, log_event):
+    def validate(cls):
         """Validate the log event against the schema."""
-        try:
-            return cls.schema.load(log_event)
-        except ValidationError as err:
-            raise ValueError(f"Invalid log data: {err.messages}")
+        raise NotImplementedError()
 
     @classmethod
     @abstractmethod
