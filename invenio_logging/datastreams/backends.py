@@ -72,11 +72,13 @@ class SearchBackend(LogBackend):
             search_query = {
                 "size": size,
                 "query": (
-                    {"match_all": {}} if not query else {
+                    {"match_all": {}}
+                    if not query
+                    else {
                         "multi_match": {
                             "query": query,
                             "fields": self.search_fields,
-                            "operator": "and"
+                            "operator": "and",
                         }
                     }
                 ),
