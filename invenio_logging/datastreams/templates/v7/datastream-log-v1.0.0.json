@@ -1,5 +1,0 @@
-{
-  "index_patterns": ["__SEARCH_INDEX_PREFIX__logs-*"],
-  "data_stream": {},
-  "composed_of": ["__SEARCH_INDEX_PREFIX__common-log-v1.0.0"]
-}

@@ -15,11 +15,11 @@ class LogBackend(ABC):
     """Abstract base class for log backends."""
 
     @abstractmethod
-    def send(self, log_type, log_event):
-        """Send a log event to the backend."""
+    def store(self, log_type, log_event):
+        """Store a log event in the backend."""
         raise NotImplementedError()
 
     @abstractmethod
-    def search(self):
+    def search(self, query, size=10, page=1):
         """Search log events."""
         raise NotImplementedError()

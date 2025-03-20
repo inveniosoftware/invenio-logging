@@ -12,7 +12,7 @@ from flask import current_app
 from werkzeug.local import LocalProxy
 
 current_logging = LocalProxy(
-    lambda: current_app.extensions["invenio-logging-datastreams"]
+    lambda: current_app.extensions["invenio-logging-engine"]
 )
 """Proxy for the instantiated logging extension."""
 

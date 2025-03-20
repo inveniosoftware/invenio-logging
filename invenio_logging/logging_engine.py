@@ -8,8 +8,6 @@
 
 """Invenio OpenSearch Datastream Logging module."""
 
-from __future__ import absolute_import, print_function
-
 from importlib_metadata import entry_points
 
 from .engine.managers import LogManager

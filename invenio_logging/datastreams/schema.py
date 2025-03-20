@@ -9,9 +9,15 @@
 """Invenio OpenSearch Datastream Schema."""
 
 from datetime import datetime
+from enum import Enum
+from marshmallow import EXCLUDE, Schema, fields
+from marshmallow.validate import OneOf
 
-from marshmallow import EXCLUDE, Schema, fields, post_dump, pre_load
-
+class LogType(Enum):
+    INFO = "INFO"
+    ERROR = "ERROR"
+    WARNING = "WARNING"
+    DEBUG = "DEBUG"
 
 class UserSchema(Schema):
     """User schema for logging."""
@@ -99,4 +105,9 @@ class LogEventSchema(BaseDatastreamSchema):
     )
     extra = fields.Dict(
         required=False, description="Additional structured metadata for logging."
+    )
+    status = fields.Str(
+        required=True,
+        description="The status type of event (e.g., INFO, ERROR, WARNING, DEBUG).",
+        validate=OneOf([e.value for e in LogType])
     )

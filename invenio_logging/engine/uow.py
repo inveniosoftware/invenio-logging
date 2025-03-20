@@ -27,4 +27,4 @@ class LoggingOp(Operation):
 
     def on_post_commit(self, uow):
         """Log the event."""
-        current_datastream_logging_manager.log(self._log_event)
+        current_logging_manager.log(self._log_event)

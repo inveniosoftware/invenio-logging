@@ -48,8 +48,8 @@ class SearchBackend(LogBackend):
                 "Ensure it is created before logging events."
             )
 
-    def send(self, log_event):
-        """Send the log event to Search engine."""
+    def store(self, log_event):
+        """store the log event into the Search engine."""
         try:
             index_prefix = current_app.config.get("SEARCH_INDEX_PREFIX", "")
             full_index_name = f"{index_prefix}{self.index_name}"

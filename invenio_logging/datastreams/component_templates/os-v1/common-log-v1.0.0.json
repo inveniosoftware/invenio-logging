@@ -4,6 +4,7 @@
       "dynamic": "strict",
       "properties": {
         "timestamp": { "type": "date" },
+        "status": { "type": "keyword" },
         "event": {
           "properties": {
             "action": { "type": "keyword" },
