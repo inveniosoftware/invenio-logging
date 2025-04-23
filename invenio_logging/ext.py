@@ -29,6 +29,9 @@ class InvenioLoggingBase(object):
 
         :param app: An instance of :class:`~flask.Flask`.
         """
+        # Default level is DEBUG, it's the handlers responsibility to
+        # set the level that they want to log at.
+        app.logger.setLevel(logging.DEBUG)
 
     @staticmethod
     def capture_pywarnings(handler):
