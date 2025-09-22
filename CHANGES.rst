@@ -9,6 +9,10 @@
 Changes
 =======
 
+Version v4.1.1 (released 2025-09-22)
+
+- console: fix handler level
+
 Version v4.1.0 (released 2025-04-28)
 
 - ext: add DEBUG as default logger level
