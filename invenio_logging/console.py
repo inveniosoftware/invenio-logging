@@ -46,12 +46,16 @@ class InvenioLoggingConsole(InvenioLoggingBase):
     def install_handler(self, app):
         """Install logging handler."""
         # Configure python logging
+        handler = logging.StreamHandler()
+
         if app.config["LOGGING_CONSOLE_PYWARNINGS"]:
-            self.capture_pywarnings(logging.StreamHandler())
+            self.capture_pywarnings(handler)
 
         if app.config["LOGGING_CONSOLE_LEVEL"] is not None:
-            for h in app.logger.handlers:
-                h.setLevel(app.config["LOGGING_CONSOLE_LEVEL"])
+            handler.setLevel(app.config["LOGGING_CONSOLE_LEVEL"])
 
         # Add request_id to log record
-        app.logger.addFilter(add_request_id_filter)
+        handler.addFilter(add_request_id_filter)
+
+        # Add the handler to the app logger
+        app.logger.addHandler(handler)
