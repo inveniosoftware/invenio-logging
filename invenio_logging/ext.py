@@ -12,6 +12,8 @@ from __future__ import absolute_import, print_function
 
 import logging
 
+from .utils import add_request_id_filter
+
 
 class InvenioLoggingBase(object):
     """Invenio-Logging extension for console."""
@@ -32,6 +34,10 @@ class InvenioLoggingBase(object):
         # Default level is DEBUG, it's the handlers responsibility to
         # set the level that they want to log at.
         app.logger.setLevel(logging.DEBUG)
+
+        # Add request_id filter to root logger so all handlers inherit it
+        if add_request_id_filter not in app.logger.filters:
+            app.logger.addFilter(add_request_id_filter)
 
     @staticmethod
     def capture_pywarnings(handler):
