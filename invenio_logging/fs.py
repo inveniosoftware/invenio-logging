@@ -21,7 +21,6 @@ from os.path import dirname, exists
 
 from . import config
 from .ext import InvenioLoggingBase
-from .utils import add_request_id_filter
 
 
 class InvenioLoggingFS(InvenioLoggingBase):
@@ -74,6 +73,3 @@ class InvenioLoggingFS(InvenioLoggingBase):
 
         if app.config["LOGGING_FS_PYWARNINGS"]:
             self.capture_pywarnings(handler)
-
-        # Add request_id to log record
-        app.logger.addFilter(add_request_id_filter)

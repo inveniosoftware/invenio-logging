@@ -18,7 +18,6 @@ import logging
 
 from . import config
 from .ext import InvenioLoggingBase
-from .utils import add_request_id_filter
 
 
 class InvenioLoggingConsole(InvenioLoggingBase):
@@ -53,9 +52,6 @@ class InvenioLoggingConsole(InvenioLoggingBase):
 
         if app.config["LOGGING_CONSOLE_LEVEL"] is not None:
             handler.setLevel(app.config["LOGGING_CONSOLE_LEVEL"])
-
-        # Add request_id to log record
-        handler.addFilter(add_request_id_filter)
 
         # Add the handler to the app logger
         app.logger.addHandler(handler)
