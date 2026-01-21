@@ -9,7 +9,7 @@ This extension is enabled by default and automatically installed via
 
 from __future__ import absolute_import, print_function
 
-import logging
+from flask.logging import default_handler
 
 from . import config
 from .ext import InvenioLoggingBase
@@ -40,13 +40,10 @@ class InvenioLoggingConsole(InvenioLoggingBase):
     def install_handler(self, app):
         """Install logging handler."""
         # Configure python logging
-        handler = logging.StreamHandler()
+        handler = default_handler
 
         if app.config["LOGGING_CONSOLE_PYWARNINGS"]:
             self.capture_pywarnings(handler)
 
         if app.config["LOGGING_CONSOLE_LEVEL"] is not None:
             handler.setLevel(app.config["LOGGING_CONSOLE_LEVEL"])
-
-        # Add the handler to the app logger
-        app.logger.addHandler(handler)
