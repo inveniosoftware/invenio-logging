@@ -16,7 +16,6 @@ from unittest.mock import patch
 
 import sentry_sdk
 from flask import Flask
-from sentry_sdk.hub import Hub
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.flask import FlaskIntegration
 
@@ -34,11 +33,14 @@ def test_init():
     InvenioLoggingSentry(app)
     assert "invenio-logging-sentry" in app.extensions
 
-    assert Hub.current and Hub.client
+    sentry_global_scope = sentry_sdk.get_global_scope()
+
+    assert sentry_global_scope.client is not None
+
     if app.config["LOGGING_SENTRY_CELERY"]:
-        assert Hub.current.get_integration(CeleryIntegration)
+        assert sentry_global_scope.client.get_integration(CeleryIntegration)
     else:
-        assert Hub.current.get_integration(FlaskIntegration)
+        assert sentry_global_scope.client.get_integration(FlaskIntegration)
 
 
 def test_sentry_failure():
