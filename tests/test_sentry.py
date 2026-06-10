@@ -14,16 +14,17 @@ from __future__ import absolute_import, print_function
 import time
 from unittest.mock import patch
 
+import sentry_sdk
 from flask import Flask
 from sentry_sdk.hub import Hub
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.flask import FlaskIntegration
 
+from invenio_logging.sentry import InvenioLoggingSentry
+
 
 def test_init():
     """Test initialization."""
-    from invenio_logging.sentry import InvenioLoggingSentry
-
     app = Flask("testapp")
     InvenioLoggingSentry(app)
     assert "invenio-logging-sentry" not in app.extensions
@@ -42,9 +43,6 @@ def test_init():
 
 def test_sentry_failure():
     """Test that sentry works and logs a failure."""
-    import sentry_sdk
-
-    from invenio_logging.sentry import InvenioLoggingSentry
 
     app = Flask("testapp")
     app.config["SENTRY_DSN"] = "http://a-secret-hash@127.0.0.1:8000/1"
