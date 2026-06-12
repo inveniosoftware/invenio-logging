@@ -1,10 +1,18 @@
 ..
     SPDX-FileCopyrightText: 2015-2024 CERN.
-    SPDX-FileCopyrightText: 2024 Graz University of Technology.
+    SPDX-FileCopyrightText: 2024-2026 Graz University of Technology.
     SPDX-License-Identifier: MIT
 
 Changes
 =======
+
+Version v4.2.0 (released 2026-06-12)
+
+- chore(git-blame): ignore the SPDX license header commit
+- chore(licenses): update license headers to use SPDX
+- fix(tests): replaced deprecated Hub with global context in tests
+- chore: move all imports to the top of the file
+- fix: upgrade sentry-sdk from 1.* to 2.*
 
 Version v4.1.1 (released 2025-09-22)
 
