@@ -112,6 +112,10 @@ class InvenioLoggingSentry(InvenioLoggingBase):
 
     def add_request_id_sentry_python(self, event, hint):
         """Add the request id as a tag."""
+        log_record = hint.get("log_record")
+        if log_record and getattr(log_record, "skip_sentry", False):
+            return None
+
         if g and hasattr(g, "request_id"):
             tags = event.get("tags") or []
             tags.append(["request_id", g.request_id])
