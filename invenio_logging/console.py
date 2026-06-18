@@ -11,6 +11,8 @@ from __future__ import absolute_import, print_function
 
 import logging
 
+from flask.logging import default_handler
+
 from . import config
 from .ext import InvenioLoggingBase
 
@@ -50,3 +52,6 @@ class InvenioLoggingConsole(InvenioLoggingBase):
 
         # Add the handler to the app logger
         app.logger.addHandler(handler)
+
+        # Remove the (likely unconfigured) Flask default handler
+        app.logger.removeHandler(default_handler)
