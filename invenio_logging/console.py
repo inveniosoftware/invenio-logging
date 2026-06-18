@@ -16,6 +16,8 @@ from flask.logging import default_handler
 from . import config
 from .ext import InvenioLoggingBase
 
+handler = logging.StreamHandler()
+
 
 class InvenioLoggingConsole(InvenioLoggingBase):
     """Invenio-Logging extension for console."""
@@ -41,8 +43,8 @@ class InvenioLoggingConsole(InvenioLoggingBase):
 
     def install_handler(self, app):
         """Install logging handler."""
-        # Configure python logging
-        handler = logging.StreamHandler()
+        if handler in app.logger.handlers:
+            return
 
         if app.config["LOGGING_CONSOLE_PYWARNINGS"]:
             self.capture_pywarnings(handler)
