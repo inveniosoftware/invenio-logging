@@ -10,7 +10,7 @@ import shutil
 import tempfile
 
 import pytest
-from mock import Mock, patch
+from mock import patch
 
 
 @pytest.yield_fixture()

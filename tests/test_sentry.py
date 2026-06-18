@@ -50,7 +50,7 @@ def test_sentry_failure():
     with patch.object(sentry_transport, "_send_request") as mock_send_request:
         try:
             1 / 0
-        except:
+        except ZeroDivisionError:
             app.logger.exception("Division by zero")
 
         # wait a bit for sentry-sdk to send the message
