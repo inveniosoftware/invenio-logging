@@ -23,6 +23,7 @@ class InvenioLoggingConsole(InvenioLoggingBase):
         self.init_config(app)
 
         if not app.config["LOGGING_CONSOLE"]:
+            app.logger.removeHandler(default_handler)
             return
 
         self.install_handler(app)
