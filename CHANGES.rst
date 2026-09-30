@@ -7,6 +7,13 @@
 Changes
 =======
 
+Unreleased
+----------
+
+- logging: add optional OpenTelemetry console tracing for UI and API apps.
+- logging: add trace context correlation to existing console/file handlers and configurable formats.
+
+
 Version v4.3.1 (released 2026-07-28)
 
 - fix(sentry): set request_id tag as dict, not list

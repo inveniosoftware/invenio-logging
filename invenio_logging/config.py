@@ -34,6 +34,9 @@ By default, warnings are logged to the console if the application is in debug
 mode, otherwise warnings are not logged.
 """
 
+LOGGING_CONSOLE_FORMAT = None
+"""Optional console log format. None preserves Flask's default formatter."""
+
 LOGGING_CONSOLE_LEVEL = None
 """Console logging level.
 
@@ -57,6 +60,11 @@ LOGGING_FS_BACKUPCOUNT = 5
 LOGGING_FS_MAXBYTES = 100 * 1024 * 1024
 """Maximum size of logging file. Default: 100MB."""
 
+LOGGING_FS_FORMAT = (
+    "%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]"
+)
+"""Filesystem log format."""
+
 LOGGING_FS_LEVEL = None
 """Filesystem logging level.
 
@@ -64,6 +72,30 @@ Set to a valid Python logging level: ``CRITICAL``, ``ERROR``, ``WARNING``,
 ``INFO``, ``DEBUG``, or ``NOTSET``.
 """
 
+
+# -------------
+# OPENTELEMETRY
+# -------------
+LOGGING_OTEL_ENABLED = False
+"""Enable programmatic Flask tracing. Requires the opentelemetry extra."""
+
+LOGGING_OTEL_SERVICE_NAME = None
+"""Service name. None uses the standard OTEL resource environment settings."""
+
+LOGGING_OTEL_TRACES_EXPORTER = None
+"""Console trace output or none. None reads OTEL_TRACES_EXPORTER (default console).
+
+No network exporter, metrics pipeline or collector is configured.
+"""
+
+LOGGING_OTEL_EXCLUDED_URLS = None
+"""Comma-separated URL regexes. None reads the standard OTEL exclusion variables."""
+
+LOGGING_OTEL_LOG_CORRELATION = True
+"""Add trace context to console/file log records when LOGGING_OTEL_ENABLED is true.
+
+No log export pipeline is installed. Existing handlers and collectors remain in use.
+"""
 
 # ------
 # SENTRY

@@ -16,6 +16,7 @@ Invenio-Logging.
    installation
    configuration
    usage
+   opentelemetry
    examplesapp
 
 

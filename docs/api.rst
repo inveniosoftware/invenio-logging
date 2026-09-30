@@ -17,6 +17,15 @@ File System
 .. automodule:: invenio_logging.fs
    :members:
 
+OpenTelemetry
+-------------
+
+.. automodule:: invenio_logging.opentelemetry
+   :members:
+
+.. autoclass:: invenio_logging.utils.AddTraceContextFilter
+   :members:
+
 Sentry
 ------
 
