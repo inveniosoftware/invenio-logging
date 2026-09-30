@@ -14,6 +14,7 @@ The following logger extensions exists:
 
 - :class:`~invenio_logging.console.InvenioLoggingConsole`
 - :class:`~invenio_logging.fs.InvenioLoggingFS`
+- :class:`~invenio_logging.opentelemetry.InvenioLoggingOpenTelemetry` (optional)
 - :class:`~invenio_logging.sentry.InvenioLoggingSentry`
 
 Initialization

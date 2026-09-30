@@ -56,11 +56,8 @@ class InvenioLoggingFS(InvenioLoggingBase):
             maxBytes=app.config["LOGGING_FS_MAXBYTES"],
             delay=True,
         )
-        handler.setFormatter(
-            logging.Formatter(
-                "%(asctime)s %(levelname)s: %(message)s " "[in %(pathname)s:%(lineno)d]"
-            )
-        )
+        self.configure_handler(app, handler)
+        handler.setFormatter(logging.Formatter(app.config["LOGGING_FS_FORMAT"]))
         handler.setLevel(app.config["LOGGING_FS_LEVEL"])
 
         # Add handler to application logger
