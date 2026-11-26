@@ -7,7 +7,7 @@
 name = "invenio-logging"
 description = "Module providing logging capabilities."
 readme = "README.rst"
-requires-python = ">=3.8"
+requires-python = ">=3.11"
 license = "MIT"
 authors = [
   { name = "CERN", email = "info@inveniosoftware.org" },
